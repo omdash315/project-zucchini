@@ -1,0 +1,49 @@
+{
+  "name": "project-zucchini",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:all": "pnpm -r --parallel lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,js,mjs,cjs}\"",
+    "format:all": "pnpm format",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json,js,mjs,cjs}\"",
+    "check-types": "turbo run check-types",
+    "typecheck": "turbo run typecheck",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^9.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.6.2",
+    "turbo": "^2.6.1",
+    "typescript": "5.9.2",
+    "zod-to-json-schema": "^3.23.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "19.2.0",
+      "react-dom": "19.2.0",
+      "next": "16.0.6",
+      "@types/react": "^19",
+      "@types/react-dom": "^19",
+      "typescript": "^5"
+    }
+  }
+}
