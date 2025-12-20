@@ -127,15 +127,28 @@ export const updateMunPaymentStatus = async (
     throw new ApiError(400, "Razorpay details not found");
   }
 
-  await db
-    .update(munRegistrationsTable)
-    .set({ isVerified: true })
-    .where(eq(munRegistrationsTable.id, munRegistrationId));
+  // Get teamId (could be null for individual registrations)
+  const teamId = munUser.teamId || munUser.firebaseUid || `individual-${munUser.id}`;
+
+  // Update verification status for the user (and all team members if part of a team)
+  if (munUser.teamId) {
+    // Update all team members
+    await db
+      .update(munRegistrationsTable)
+      .set({ isVerified: true })
+      .where(eq(munRegistrationsTable.teamId, munUser.teamId));
+  } else {
+    // Update only this user
+    await db
+      .update(munRegistrationsTable)
+      .set({ isVerified: true })
+      .where(eq(munRegistrationsTable.id, munRegistrationId));
+  }
 
   const [transaction] = await db
     .insert(munTransactionsTable)
     .values({
-      munRegistrationId,
+      teamId, // Use teamId instead of munRegistrationId
       transactionId: razorpayDetails.paymentId,
       amount,
       isVerified: true,

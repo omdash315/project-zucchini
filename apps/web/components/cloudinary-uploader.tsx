@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, DragEvent, ChangeEvent } from "react";
+import { useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
 import { Upload, Check, Copy, X, Loader2, Image, FileText } from "lucide-react";
 
 interface UploadedFile {
@@ -31,6 +31,27 @@ export default function CloudinaryUploader({
   const [error, setError] = useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize uploadedFiles from value prop (for restoring from localStorage)
+  useEffect(() => {
+    if (value && uploadedFiles.length === 0) {
+      // Extract filename from URL
+      const urlParts = value.split("/");
+      const fileName = urlParts[urlParts.length - 1] || "uploaded-file";
+      const fileExtension = fileName.split(".").pop();
+
+      setUploadedFiles([
+        {
+          url: value,
+          publicId: fileName,
+          format: fileExtension || "file",
+          resourceType: "image", // Assume image for ID cards
+          fileName: fileName,
+          timestamp: Date.now(),
+        },
+      ]);
+    }
+  }, [value, uploadedFiles.length]);
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();

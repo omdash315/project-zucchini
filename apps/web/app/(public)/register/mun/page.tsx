@@ -5,8 +5,16 @@ import { signInWithGoogle, onAuthStateChanged, type User } from "@repo/firebase-
 import { useApi } from "@repo/shared-utils";
 import { LoadingState, ProgressBar, AuthStep, CompleteStep } from "@/components/registration";
 import { MunRegistrationForm, MunPaymentButton } from "@/components/registration/mun";
+import type { MunRegistration } from "@repo/shared-types";
 
-type RegistrationStep = "auth" | "form" | "payment" | "complete";
+type RegistrationStep =
+  | "auth"
+  | "form"
+  | "form-leader"
+  | "form-teammate1"
+  | "form-teammate2"
+  | "payment"
+  | "complete";
 
 interface UserData {
   name: string;
@@ -15,12 +23,21 @@ interface UserData {
   committeeChoice?: string;
 }
 
+interface TeamData {
+  leader: MunRegistration | null;
+  teammate1: MunRegistration | null;
+  teammate2: MunRegistration | null;
+}
+
 interface CheckMunRegistrationResponse {
   isRegistered: boolean;
   userId?: number;
   name?: string;
   email?: string;
   isPaymentVerified?: boolean;
+  isTeamMember?: boolean;
+  isTeamLeader?: boolean;
+  teamLeaderName?: string;
 }
 
 export default function MunRegisterPage() {
@@ -30,8 +47,43 @@ export default function MunRegisterPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [isTeamRegistration, setIsTeamRegistration] = useState(false);
+  const [teamData, setTeamData] = useState<TeamData>({
+    leader: null,
+    teammate1: null,
+    teammate2: null,
+  });
 
   const { execute: checkRegistration } = useApi<CheckMunRegistrationResponse>();
+
+  // Restore team data from localStorage on mount
+  useEffect(() => {
+    const savedTeamData = localStorage.getItem("munTeamRegistration");
+    const savedStep = localStorage.getItem("munCurrentStep");
+    const savedIsTeamReg = localStorage.getItem("munIsTeamRegistration");
+
+    if (savedTeamData) {
+      try {
+        const parsed = JSON.parse(savedTeamData);
+        setTeamData(parsed);
+
+        // Restore step if saved
+        if (savedStep) {
+          setCurrentStep(savedStep as RegistrationStep);
+        }
+
+        // Restore team registration flag
+        if (savedIsTeamReg) {
+          setIsTeamRegistration(savedIsTeamReg === "true");
+        }
+      } catch (error) {
+        console.error("Failed to parse saved team data:", error);
+        localStorage.removeItem("munTeamRegistration");
+        localStorage.removeItem("munCurrentStep");
+        localStorage.removeItem("munIsTeamRegistration");
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(async (firebaseUser) => {
@@ -52,14 +104,25 @@ export default function MunRegisterPage() {
             if (result.isPaymentVerified) {
               setCurrentStep("complete");
             } else {
-              setCurrentStep("payment");
+              // Only set to payment if not already in a form step (from localStorage)
+              const savedStep = localStorage.getItem("munCurrentStep");
+              if (!savedStep || savedStep === "payment") {
+                setCurrentStep("payment");
+              }
             }
           } else {
-            setCurrentStep("form");
+            // Only set to form if not already restored from localStorage
+            const savedStep = localStorage.getItem("munCurrentStep");
+            if (!savedStep) {
+              setCurrentStep("form");
+            }
           }
         } catch (error) {
           console.error("Failed to check MUN registration status:", error);
-          setCurrentStep("form");
+          const savedStep = localStorage.getItem("munCurrentStep");
+          if (!savedStep) {
+            setCurrentStep("form");
+          }
         }
       }
 
@@ -68,6 +131,8 @@ export default function MunRegisterPage() {
 
     return () => unsubscribe();
   }, []);
+
+  const { execute: registerTeam } = useApi();
 
   const handleGoogleSignIn = async () => {
     setError(null);
@@ -81,17 +146,106 @@ export default function MunRegisterPage() {
     }
   };
 
-  const handleRegistrationComplete = (studentType: string, committeeChoice: string) => {
-    setUserData({
-      name: user?.displayName || "",
-      email: user?.email || "",
-      studentType: studentType as "SCHOOL" | "COLLEGE",
-      committeeChoice,
-    });
-    setCurrentStep("payment");
+  const handleRegistrationComplete = async (
+    studentType: string,
+    committeeChoice: string,
+    registrationData: MunRegistration
+  ) => {
+    // Check if this is a team registration (MOOT_COURT)
+    if (committeeChoice === "MOOT_COURT") {
+      setIsTeamRegistration(true);
+      localStorage.setItem("munIsTeamRegistration", "true");
+
+      // Determine which step we're on and store data accordingly
+      if (currentStep === "form" || currentStep === "form-leader") {
+        const updatedTeamData = { ...teamData, leader: registrationData };
+        setTeamData(updatedTeamData);
+        // Save to localStorage
+        localStorage.setItem("munTeamRegistration", JSON.stringify(updatedTeamData));
+        localStorage.setItem("munCurrentStep", "form-teammate1");
+        setCurrentStep("form-teammate1");
+      } else if (currentStep === "form-teammate1") {
+        const updatedTeamData = { ...teamData, teammate1: registrationData };
+        setTeamData(updatedTeamData);
+        // Save to localStorage
+        localStorage.setItem("munTeamRegistration", JSON.stringify(updatedTeamData));
+        localStorage.setItem("munCurrentStep", "form-teammate2");
+        setCurrentStep("form-teammate2");
+      } else if (currentStep === "form-teammate2") {
+        const updatedTeamData = { ...teamData, teammate2: registrationData };
+        setTeamData(updatedTeamData);
+        // Save to localStorage
+        localStorage.setItem("munTeamRegistration", JSON.stringify(updatedTeamData));
+
+        // All team data collected, register the team
+        try {
+          setIsLoading(true);
+          setError(null);
+
+          await registerTeam("mun/register", {
+            method: "POST",
+            body: JSON.stringify({
+              leader: updatedTeamData.leader,
+              teammate1: updatedTeamData.teammate1,
+              teammate2: updatedTeamData.teammate2,
+            }),
+          });
+
+          // Only proceed to payment if registration was successful
+          setUserData({
+            name: user?.displayName || "",
+            email: user?.email || "",
+            studentType: studentType as "SCHOOL" | "COLLEGE",
+            committeeChoice,
+          });
+          localStorage.setItem("munCurrentStep", "payment");
+          setCurrentStep("payment");
+        } catch (error) {
+          setError(error instanceof Error ? error.message : "Failed to register team");
+          // Don't proceed to payment on error
+          console.error("Team registration failed:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    } else {
+      // Individual registration (OVERNIGHT_CRISIS)
+      setIsTeamRegistration(false);
+      localStorage.setItem("munIsTeamRegistration", "false");
+
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        await registerTeam("mun/register", {
+          method: "POST",
+          body: JSON.stringify(registrationData),
+        });
+
+        // Only proceed to payment if registration was successful
+        setUserData({
+          name: user?.displayName || "",
+          email: user?.email || "",
+          studentType: studentType as "SCHOOL" | "COLLEGE",
+          committeeChoice,
+        });
+        localStorage.setItem("munCurrentStep", "payment");
+        setCurrentStep("payment");
+      } catch (error) {
+        setError(error instanceof Error ? error.message : "Failed to register");
+        // Don't proceed to payment on error
+        console.error("Individual registration failed:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   const handlePaymentSuccess = () => {
+    // Clear localStorage on successful payment
+    localStorage.removeItem("munTeamRegistration");
+    localStorage.removeItem("munCurrentStep");
+    localStorage.removeItem("munIsTeamRegistration");
     setCurrentStep("complete");
   };
 
@@ -118,13 +272,87 @@ export default function MunRegisterPage() {
             <AuthStep onGoogleSignIn={handleGoogleSignIn} isLoading={isLoading} error={error} />
           )}
 
-          {currentStep === "form" && user && (
-            <MunRegistrationForm
-              user={user}
-              onComplete={(studentType, committeeChoice) =>
-                handleRegistrationComplete(studentType, committeeChoice)
-              }
-            />
+          {/* Individual registration or Team Leader step */}
+          {(currentStep === "form" || currentStep === "form-leader") && user && (
+            <div>
+              {currentStep === "form-leader" && (
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Team Leader Registration
+                  </h2>
+                  <p className="text-gray-600">
+                    Step 1 of 3: Enter your details as the team leader
+                  </p>
+                </div>
+              )}
+              <MunRegistrationForm
+                user={user}
+                stepTitle={currentStep === "form-leader" ? "Team Leader" : undefined}
+                initialData={teamData.leader || undefined}
+                buttonText={
+                  currentStep === "form-leader" ? "Enter Teammate 1 Details" : "Continue to Payment"
+                }
+                onComplete={(studentType, committeeChoice, registrationData) =>
+                  handleRegistrationComplete(studentType, committeeChoice, registrationData)
+                }
+              />
+            </div>
+          )}
+
+          {/* Teammate 1 step */}
+          {currentStep === "form-teammate1" && user && teamData.leader && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Teammate 1 Registration</h2>
+                <p className="text-gray-600">Step 2 of 3: Enter details for your first teammate</p>
+              </div>
+              <MunRegistrationForm
+                user={user}
+                stepTitle="Teammate 1"
+                initialData={{
+                  ...(teamData.teammate1 || {}),
+                  studentType: teamData.leader.studentType,
+                  committeeChoice: teamData.leader.committeeChoice,
+                  institute: teamData.leader.institute,
+                  university: teamData.leader.university,
+                  city: teamData.leader.city,
+                }}
+                hideCommitteeChoice={true}
+                clearUserDetails={true}
+                buttonText="Enter Teammate 2 Details"
+                onComplete={(studentType, committeeChoice, registrationData) =>
+                  handleRegistrationComplete(studentType, committeeChoice, registrationData)
+                }
+              />
+            </div>
+          )}
+
+          {/* Teammate 2 step */}
+          {currentStep === "form-teammate2" && user && teamData.leader && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Teammate 2 Registration</h2>
+                <p className="text-gray-600">Step 3 of 3: Enter details for your second teammate</p>
+              </div>
+              <MunRegistrationForm
+                user={user}
+                stepTitle="Teammate 2"
+                initialData={{
+                  ...(teamData.teammate2 || {}),
+                  studentType: teamData.leader.studentType,
+                  committeeChoice: teamData.leader.committeeChoice,
+                  institute: teamData.leader.institute,
+                  university: teamData.leader.university,
+                  city: teamData.leader.city,
+                }}
+                hideCommitteeChoice={true}
+                clearUserDetails={true}
+                buttonText="Continue to Payment"
+                onComplete={(studentType, committeeChoice, registrationData) =>
+                  handleRegistrationComplete(studentType, committeeChoice, registrationData)
+                }
+              />
+            </div>
           )}
 
           {currentStep === "payment" && userData && (

@@ -87,7 +87,11 @@ export type NewRazorpayPayment = typeof razorpayPaymentsTable.$inferInsert;
 // MUN Registration Tables
 export const munRegistrationsTable = pgTable("mun_registrations", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  firebaseUid: varchar({ length: 128 }).notNull().unique(),
+  firebaseUid: varchar({ length: 128 }).unique(), // Nullable for teammates until they log in
+
+  // Team Information (for MOOT Court teams)
+  teamId: varchar({ length: 36 }), // UUID to link team members
+  isTeamLeader: boolean().default(false),
 
   // Basic Information
   name: varchar({ length: 255 }).notNull(),
@@ -109,15 +113,6 @@ export const munRegistrationsTable = pgTable("mun_registrations", {
   committeeChoice: munCommitteeEnum().notNull(),
   hasParticipatedBefore: boolean().notNull(),
 
-  // Team Information (for MOOT Court - Option A: Leader registers team)
-  isTeamLeader: boolean().default(false),
-  teammate1Name: varchar({ length: 255 }),
-  teammate1Email: varchar({ length: 255 }),
-  teammate1Phone: varchar({ length: 10 }),
-  teammate2Name: varchar({ length: 255 }),
-  teammate2Email: varchar({ length: 255 }),
-  teammate2Phone: varchar({ length: 10 }),
-
   // Emergency & Safety
   emergencyContactName: varchar({ length: 255 }).notNull(),
   emergencyContactPhone: varchar({ length: 10 }).notNull(),
@@ -138,10 +133,7 @@ export const munRegistrationsTable = pgTable("mun_registrations", {
 
 export const munTransactionsTable = pgTable("mun_transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  munRegistrationId: integer()
-    .notNull()
-    .unique()
-    .references(() => munRegistrationsTable.id, { onDelete: "cascade" }),
+  teamId: varchar({ length: 36 }).notNull().unique(), // Links to team (or individual if no team)
   transactionId: varchar({ length: 255 }).notNull(),
   amount: integer().notNull(), // Base: 1500 (college) or 1200 (school), tripled for MOOT Court teams
   paymentMethod: paymentMethodEnum(),

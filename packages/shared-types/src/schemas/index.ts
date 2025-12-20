@@ -160,4 +160,9 @@ export const schemas = {
 };
 
 // MUN Registration Schema
-export { MunRegistrationSchema, type MunRegistration } from "./mun-registration";
+export {
+  MunRegistrationSchema,
+  type MunRegistration,
+  TeamMunRegistrationSchema,
+  type TeamMunRegistration,
+} from "./mun-registration";

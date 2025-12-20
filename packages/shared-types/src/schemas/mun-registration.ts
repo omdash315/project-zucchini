@@ -43,15 +43,6 @@ export const MunRegistrationSchema = z
     committeeChoice: z.enum(["OVERNIGHT_CRISIS", "MOOT_COURT"]),
     hasParticipatedBefore: z.boolean(),
 
-    // Team (required only for MOOT Court - Option A)
-    isTeamLeader: z.boolean().default(false),
-    teammate1Name: z.string().optional(),
-    teammate1Email: z.string().optional(),
-    teammate1Phone: z.string().optional(),
-    teammate2Name: z.string().optional(),
-    teammate2Email: z.string().optional(),
-    teammate2Phone: z.string().optional(),
-
     // Emergency
     emergencyContactName: z.string().min(1, MESSAGES.REQUIRED("Emergency contact name")),
     emergencyContactPhone: z
@@ -103,181 +94,15 @@ export const MunRegistrationSchema = z
       message: "Emergency contact number must be different from your phone number",
       path: ["emergencyContactPhone"],
     }
-  )
-  .refine(
-    (data) => {
-      // MOOT Court requires team information
-      if (data.committeeChoice === "MOOT_COURT") {
-        return !!data.teammate1Name && data.teammate1Name.trim().length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Teammate 1 name is required",
-      path: ["teammate1Name"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT" && data.teammate1Name) {
-        return PATTERNS.NAME.test(data.teammate1Name);
-      }
-      return true;
-    },
-    {
-      message: "Invalid teammate 1 name",
-      path: ["teammate1Name"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT") {
-        return !!data.teammate1Email && data.teammate1Email.trim().length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Teammate 1 email is required",
-      path: ["teammate1Email"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT" && data.teammate1Email) {
-        return PATTERNS.EMAIL.test(data.teammate1Email);
-      }
-      return true;
-    },
-    {
-      message: "Invalid teammate 1 email. Please use Gmail",
-      path: ["teammate1Email"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT") {
-        return !!data.teammate1Phone && data.teammate1Phone.trim().length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Teammate 1 phone is required",
-      path: ["teammate1Phone"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT" && data.teammate1Phone) {
-        return PATTERNS.PHONE.test(data.teammate1Phone);
-      }
-      return true;
-    },
-    {
-      message: "Teammate 1 phone must be 10 digits",
-      path: ["teammate1Phone"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT") {
-        return !!data.teammate2Name && data.teammate2Name.trim().length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Teammate 2 name is required",
-      path: ["teammate2Name"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT" && data.teammate2Name) {
-        return PATTERNS.NAME.test(data.teammate2Name);
-      }
-      return true;
-    },
-    {
-      message: "Invalid teammate 2 name",
-      path: ["teammate2Name"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT") {
-        return !!data.teammate2Email && data.teammate2Email.trim().length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Teammate 2 email is required",
-      path: ["teammate2Email"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT" && data.teammate2Email) {
-        return PATTERNS.EMAIL.test(data.teammate2Email);
-      }
-      return true;
-    },
-    {
-      message: "Invalid teammate 2 email. Please use Gmail",
-      path: ["teammate2Email"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT") {
-        return !!data.teammate2Phone && data.teammate2Phone.trim().length > 0;
-      }
-      return true;
-    },
-    {
-      message: "Teammate 2 phone is required",
-      path: ["teammate2Phone"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.committeeChoice === "MOOT_COURT" && data.teammate2Phone) {
-        return PATTERNS.PHONE.test(data.teammate2Phone);
-      }
-      return true;
-    },
-    {
-      message: "Teammate 2 phone must be 10 digits",
-      path: ["teammate2Phone"],
-    }
-  )
-  .refine(
-    (data) => {
-      // For MOOT Court, ensure teammate emails are unique
-      if (data.committeeChoice === "MOOT_COURT") {
-        const emails = [data.email, data.teammate1Email, data.teammate2Email].filter(Boolean);
-        const uniqueEmails = new Set(emails);
-        return uniqueEmails.size === emails.length;
-      }
-      return true;
-    },
-    {
-      message: "All team members must have different email addresses",
-      path: ["teammate2Email"],
-    }
-  )
-  .refine(
-    (data) => {
-      // For MOOT Court, ensure teammate phones are unique
-      if (data.committeeChoice === "MOOT_COURT") {
-        const phones = [data.phone, data.teammate1Phone, data.teammate2Phone].filter(Boolean);
-        const uniquePhones = new Set(phones);
-        return uniquePhones.size === phones.length;
-      }
-      return true;
-    },
-    {
-      message: "All team members must have different phone numbers",
-      path: ["teammate2Phone"],
-    }
   );
 
 export type MunRegistration = z.infer<typeof MunRegistrationSchema>;
+
+// Team Registration Schema (for MOOT Court teams)
+export const TeamMunRegistrationSchema = z.object({
+  teamLeader: MunRegistrationSchema,
+  teammate1: MunRegistrationSchema,
+  teammate2: MunRegistrationSchema,
+});
+
+export type TeamMunRegistration = z.infer<typeof TeamMunRegistrationSchema>;
