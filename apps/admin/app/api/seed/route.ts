@@ -4,11 +4,6 @@ import { seedDatabase, type SeedData } from "@repo/database";
 
 export async function POST(req: NextRequest) {
   try {
-    return handleResponse({
-      success: false,
-      message: "Unauthorized",
-    });
-
     const data: SeedData = await req.json();
 
     if (!data || typeof data !== "object") {

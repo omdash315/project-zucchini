@@ -15,7 +15,16 @@ export type MunRegistration = {
   institute: string;
   city: string;
   state: string;
-  committeeChoice: "OVERNIGHT_CRISIS" | "MOOT_COURT";
+  committeeChoice:
+    | "UNHRC"
+    | "UNGA_DISEC"
+    | "ECOSOC"
+    | "AIPPM"
+    | "IP_PHOTOGRAPHER"
+    | "IP_JOURNALIST"
+    | "UNSC_OVERNIGHT_CRISIS"
+    | "AIPPM_OVERNIGHT_CRISIS"
+    | "MOOT_COURT";
   isNitrStudent: boolean;
   isVerified: boolean;
   isPaymentVerified: boolean;
@@ -61,13 +70,24 @@ export const munColumns: ColumnDef<MunRegistration>[] = [
     cell: ({ row }) => {
       const committee = row.getValue("committeeChoice") as string;
       const isMootCourt = committee === "MOOT_COURT";
+      const committeeLabels: Record<string, string> = {
+        UNHRC: "UNHRC",
+        UNGA_DISEC: "UNGA DISEC",
+        ECOSOC: "ECOSOC",
+        AIPPM: "AIPPM",
+        IP_PHOTOGRAPHER: "IP - Photographer",
+        IP_JOURNALIST: "IP - Journalist",
+        UNSC_OVERNIGHT_CRISIS: "UNSC Crisis",
+        AIPPM_OVERNIGHT_CRISIS: "AIPPM Crisis",
+        MOOT_COURT: "Moot Court",
+      };
       return (
         <span
           className={`text-xs font-medium px-2 py-1 rounded ${
             isMootCourt ? "bg-purple-500/20 text-purple-400" : "bg-orange-500/20 text-orange-400"
           }`}
         >
-          {isMootCourt ? "Moot Court" : "Overnight Crisis"}
+          {committeeLabels[committee] || committee}
         </span>
       );
     },

@@ -27,18 +27,15 @@ export default function LoginPage({ className, ...props }: React.ComponentProps<
       if (!user) return;
 
       const response = await execute("auth/login", {
-        method: "POST",
-        body: JSON.stringify({ uid: user.uid }),
+        method: "GET",
       });
 
       if (response?.amIAdmin) {
         router.push("/");
       } else {
         await signOut();
-        // Check if registered but not verified
         const checkResponse = await execute("auth/check", {
-          method: "POST",
-          body: JSON.stringify({ uid: user.uid }),
+          method: "GET",
         });
 
         if (checkResponse?.isRegistered && !checkResponse?.isVerified) {

@@ -48,7 +48,16 @@ export type SeedData = {
     state: string;
     rollNumber: string;
     idCard: string;
-    committeeChoice: "OVERNIGHT_CRISIS" | "MOOT_COURT";
+    committeeChoice:
+      | "UNHRC"
+      | "UNGA_DISEC"
+      | "ECOSOC"
+      | "AIPPM"
+      | "IP_PHOTOGRAPHER"
+      | "IP_JOURNALIST"
+      | "UNSC_OVERNIGHT_CRISIS"
+      | "AIPPM_OVERNIGHT_CRISIS"
+      | "MOOT_COURT";
     hasParticipatedBefore: boolean;
     emergencyContactName: string;
     emergencyContactPhone: string;

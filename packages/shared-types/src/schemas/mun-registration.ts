@@ -39,7 +39,17 @@ export const MunRegistrationSchema = z
     rollNumber: z.string().min(1, MESSAGES.REQUIRED("Roll number")),
     idCard: z.string().url(MESSAGES.REQUIRED("ID card upload")),
     // MUN Specific
-    committeeChoice: z.enum(["OVERNIGHT_CRISIS", "MOOT_COURT"]),
+    committeeChoice: z.enum([
+      "UNHRC",
+      "UNGA_DISEC",
+      "ECOSOC",
+      "AIPPM",
+      "IP_PHOTOGRAPHER",
+      "IP_JOURNALIST",
+      "UNSC_OVERNIGHT_CRISIS",
+      "AIPPM_OVERNIGHT_CRISIS",
+      "MOOT_COURT",
+    ]),
     hasParticipatedBefore: z.boolean(),
 
     // Emergency
@@ -70,8 +80,12 @@ export const MunRegistrationSchema = z
   })
   .refine(
     (data) => {
-      // School students cannot register for Overnight Crisis
-      if (data.studentType === "SCHOOL" && data.committeeChoice === "OVERNIGHT_CRISIS") {
+      // School students cannot register for Overnight Crisis Committees
+      const overnightCrisisCommittees = ["UNSC_OVERNIGHT_CRISIS", "AIPPM_OVERNIGHT_CRISIS"];
+      if (
+        data.studentType === "SCHOOL" &&
+        overnightCrisisCommittees.includes(data.committeeChoice)
+      ) {
         return false;
       }
       return true;

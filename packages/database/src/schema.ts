@@ -4,7 +4,17 @@ export const genderEnum = pgEnum("gender", ["MALE", "FEMALE"]);
 export const paymentMethodEnum = pgEnum("payment_method", ["qr", "razorpay"]);
 
 export const studentTypeEnum = pgEnum("student_type", ["SCHOOL", "COLLEGE"]);
-export const munCommitteeEnum = pgEnum("mun_committee", ["OVERNIGHT_CRISIS", "MOOT_COURT"]);
+export const munCommitteeEnum = pgEnum("mun_committee", [
+  "UNHRC",
+  "UNGA_DISEC",
+  "ECOSOC",
+  "AIPPM",
+  "IP_PHOTOGRAPHER",
+  "IP_JOURNALIST",
+  "UNSC_OVERNIGHT_CRISIS",
+  "AIPPM_OVERNIGHT_CRISIS",
+  "MOOT_COURT",
+]);
 export const bloodGroupEnum = pgEnum("blood_group", [
   "A_POSITIVE",
   "A_NEGATIVE",

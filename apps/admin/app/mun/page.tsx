@@ -176,6 +176,16 @@ function TeamCard({
 }
 
 function IndividualCard({ member }: { member: TeamMember }) {
+  const committeeLabels: Record<string, string> = {
+    UNHRC: "UNHRC",
+    UNGA_DISEC: "UNGA DISEC",
+    ECOSOC: "ECOSOC",
+    AIPPM: "AIPPM",
+    IP_PHOTOGRAPHER: "IP - Photo",
+    IP_JOURNALIST: "IP - Journal",
+    UNSC_OVERNIGHT_CRISIS: "UNSC Crisis",
+    AIPPM_OVERNIGHT_CRISIS: "AIPPM Crisis",
+  };
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
       <div className="flex items-start justify-between">
@@ -187,7 +197,7 @@ function IndividualCard({ member }: { member: TeamMember }) {
             <div className="flex items-center gap-2">
               <span className="font-medium text-white">{member.name}</span>
               <span className="text-xs font-medium px-2 py-0.5 rounded bg-orange-500/20 text-orange-400">
-                Crisis
+                {committeeLabels[member.committeeChoice] || member.committeeChoice}
               </span>
               <span
                 className={`text-xs font-medium px-2 py-0.5 rounded ${
@@ -252,7 +262,7 @@ export default function MunPage() {
         if (allJson.success) {
           // Filter Overnight Crisis individuals (no teamId or null)
           const crisisIndividuals = allJson.data.registrations.filter(
-            (r: any) => !r.teamId || r.committeeChoice === "OVERNIGHT_CRISIS"
+            (r: any) => !r.teamId || r.committeeChoice !== "MOOT_COURT"
           );
           setIndividuals(crisisIndividuals);
           setData(allJson.data.registrations);
@@ -314,7 +324,7 @@ export default function MunPage() {
               color="bg-purple-500/20 text-purple-400"
             />
             <StatCard
-              title="Crisis Individuals"
+              title="Solo Registrations"
               value={individuals.length}
               icon={User}
               color="bg-orange-500/20 text-orange-400"
@@ -351,11 +361,11 @@ export default function MunPage() {
           </div>
         </div>
 
-        {/* Overnight Crisis Individuals Section */}
+        {/* Solo Registrations Section */}
         <div>
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-orange-500"></span>
-            Overnight Crisis (Individual)
+            Solo Registrations
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {individuals.map((member) => (
@@ -363,7 +373,7 @@ export default function MunPage() {
             ))}
             {individuals.length === 0 && (
               <div className="text-center py-8 text-zinc-500 border border-dashed border-zinc-800 rounded-xl col-span-2">
-                No Overnight Crisis registrations yet.
+                No solo registrations yet.
               </div>
             )}
           </div>
