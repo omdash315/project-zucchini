@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { signInWithGoogle, onAuthStateChanged, type User } from "@repo/firebase-config";
 import { useApi } from "@repo/shared-utils";
 import { LoadingState, ProgressBar, AuthStep, CompleteStep } from "@/components/registration";
@@ -150,7 +150,12 @@ export default function MunRegisterPage() {
     return () => unsubscribe();
   }, []);
 
-  const { execute: registerTeam } = useApi();
+  const lastRegisterError = useRef<string | null>(null);
+  const { execute: registerTeam } = useApi({
+    onError: (error) => {
+      lastRegisterError.current = error;
+    },
+  });
 
   const handleGoogleSignIn = async () => {
     setError(null);
@@ -213,7 +218,7 @@ export default function MunRegisterPage() {
 
         if (result === null) {
           toast.error("Team registration failed", {
-            description: "Failed to register team. Please try again.",
+            description: lastRegisterError.current || "Failed to register team. Please try again.",
           });
           return;
         }
@@ -262,7 +267,7 @@ export default function MunRegisterPage() {
 
       if (res === null) {
         toast.error("Registration failed", {
-          description: "Failed to register. Please try again.",
+          description: lastRegisterError.current || "Failed to register. Please try again.",
         });
         return;
       }

@@ -27,21 +27,14 @@ export const getMunUserByFirebaseUid = async (firebaseUid: string) => {
 };
 
 const checkEmailRegistration = async (email: string): Promise<boolean> => {
+  // Only check MUN registrations - users can register for both NITRUTSAV and MUN
   const [munReg] = await db
     .select()
     .from(munRegistrationsTable)
     .where(eq(munRegistrationsTable.email, email))
     .limit(1);
 
-  if (munReg) return true;
-
-  const [nitrutsavReg] = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.email, email))
-    .limit(1);
-
-  return !!nitrutsavReg;
+  return !!munReg;
 };
 
 export const registerMunUser = async (

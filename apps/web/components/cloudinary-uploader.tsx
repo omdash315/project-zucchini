@@ -32,7 +32,7 @@ export default function CloudinaryUploader({
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize uploadedFiles from value prop (for restoring from localStorage)
+  // Sync uploadedFiles from value prop (for restoring from localStorage or external state changes)
   useEffect(() => {
     if (value && uploadedFiles.length === 0) {
       // Extract filename from URL
@@ -50,8 +50,11 @@ export default function CloudinaryUploader({
           timestamp: Date.now(),
         },
       ]);
+    } else if (!value && uploadedFiles.length > 0) {
+      // Clear files when value is cleared externally
+      setUploadedFiles([]);
     }
-  }, [value, uploadedFiles.length]);
+  }, [value]);
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -84,30 +87,54 @@ export default function CloudinaryUploader({
     setError(null);
     setIsUploading(true);
 
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      setError("Cloudinary configuration is missing");
+      setIsUploading(false);
+      return;
+    }
+
     // Respect maxFiles limit
     const filesToUpload = maxFiles ? files.slice(0, maxFiles) : files;
 
     for (const file of filesToUpload) {
       try {
+        // Validate file type
+        const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+        if (!ALLOWED_TYPES.includes(file.type)) {
+          throw new Error("Only JPEG, PNG, WebP images and PDF files are allowed");
+        }
+
+        // Validate file size (5MB max)
+        const MAX_SIZE = 5 * 1024 * 1024;
+        if (file.size > MAX_SIZE) {
+          throw new Error("Maximum file size is 5MB");
+        }
+
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+        formData.append("folder", "nitrutsav-2026");
 
-        const response = await fetch("/api/cloudinary-upload", {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
           method: "POST",
           body: formData,
         });
 
-        const result = await response.json();
-
-        if (!result.success) {
-          throw new Error(result.error || "Upload failed");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error?.message || "Upload failed");
         }
 
+        const result = await response.json();
+
         const uploadedFile = {
-          url: result.data.url,
-          publicId: result.data.publicId,
-          format: result.data.format,
-          resourceType: result.data.resourceType,
+          url: result.secure_url,
+          publicId: result.public_id,
+          format: result.format,
+          resourceType: result.resource_type,
           fileName: file.name,
           timestamp: Date.now(),
         };
@@ -120,7 +147,7 @@ export default function CloudinaryUploader({
         }
 
         // Call the callback with the URL
-        onUploadComplete?.(result.data.url);
+        onUploadComplete?.(result.secure_url);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Upload failed");
       }
