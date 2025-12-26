@@ -88,8 +88,46 @@ export default function MunRegistrationForm({
 
   const { loading: isSubmitting, error: submitError } = useApi({});
 
+  // Banned institute keywords - same as server-side validation
+  const bannedKeywords = [
+    "iter",
+    "soa",
+    "siksha o anusandhan",
+    "siksha anusandhan",
+    "institute of technical education and research",
+  ];
+
+  const containsBannedKeyword = (text: string): boolean => {
+    const normalizedText = text
+      .toLowerCase()
+      .replace(/['"`\-]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    return bannedKeywords.some((keyword) => normalizedText.includes(keyword));
+  };
+
   const handleFieldChange = (field: keyof MunRegistration, value: any) => {
     handleInputChange(field, value);
+  };
+
+  const handleInstituteBlur = () => {
+    if (formData.institute && containsBannedKeyword(formData.institute)) {
+      setErrors((prev) => ({
+        ...prev,
+        institute:
+          "Students from this institute/university have been officially barred from participating in NITRUTSAV'26",
+      }));
+    }
+  };
+
+  const handleUniversityBlur = () => {
+    if (formData.university && containsBannedKeyword(formData.university)) {
+      setErrors((prev) => ({
+        ...prev,
+        university:
+          "Students from this institute/university have been officially barred from participating in NITRUTSAV'26",
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -214,6 +252,7 @@ export default function MunRegistrationForm({
                     handleFieldChange("institute", value);
                   }
                 }}
+                onBlur={handleInstituteBlur}
                 placeholder="Search for your college..."
                 disabled={isNitrStudent}
                 error={errors.institute}
@@ -250,6 +289,7 @@ export default function MunRegistrationForm({
               type="text"
               value={formData.university || ""}
               onChange={(e) => !isNitrStudent && handleFieldChange("university", e.target.value)}
+              onBlur={handleUniversityBlur}
               placeholder={
                 formData.studentType === "SCHOOL"
                   ? "Enter your board (CBSE, ICSE, State Board, etc.)"

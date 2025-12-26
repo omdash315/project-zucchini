@@ -11,6 +11,7 @@ interface SearchableSelectProps {
   options: Option[];
   value?: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   disabled?: boolean;
   error?: string;
@@ -22,6 +23,7 @@ export default function SearchableSelect({
   options,
   value,
   onChange,
+  onBlur,
   placeholder = "Search or select...",
   disabled = false,
   error,
@@ -77,6 +79,7 @@ export default function SearchableSelect({
     if (customValue.trim()) {
       onChange(customValue.trim());
     }
+    onBlur?.();
   };
 
   const handleBackToSelect = () => {

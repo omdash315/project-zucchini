@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { notAllowedInstitutes } from "./index";
 
 const PATTERNS = {
   NAME: /^[a-zA-Z\s]+$/,
@@ -14,17 +15,6 @@ const MESSAGES = {
 };
 
 /**
- * Banned institute keywords - if any of these appear in the input, reject it
- */
-const bannedKeywords = [
-  "iter",
-  "soa",
-  "siksha o anusandhan",
-  "siksha anusandhan",
-  "institute of technical education and research",
-];
-
-/**
  * Check if text contains any banned keywords
  */
 const containsBannedKeyword = (text: string): boolean => {
@@ -33,7 +23,7 @@ const containsBannedKeyword = (text: string): boolean => {
     .replace(/['\"`\-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  return bannedKeywords.some((keyword) => normalizedText.includes(keyword));
+  return notAllowedInstitutes.some((keyword) => normalizedText.includes(keyword));
 };
 
 const instituteValidation = z
