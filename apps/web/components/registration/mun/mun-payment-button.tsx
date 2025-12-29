@@ -37,20 +37,20 @@ export default function MunPaymentButton({
         body: JSON.stringify({ studentType, committeeChoice }),
       });
 
-      if (!orderResult) {
-        onPaymentFailure?.(initiateOrderApi.error || "Failed to initiate payment");
+      if (!orderResult.success) {
+        onPaymentFailure?.(orderResult.error || "Failed to initiate payment");
         setIsLoading(false);
         return;
       }
 
-      const { orderId, amount: orderAmount } = orderResult;
+      const { orderId, amount: orderAmount } = orderResult.data!;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: orderAmount * 100,
         currency: "INR",
         name: "NITRUTSAV 2026 - MUN",
-        description: `MUN Registration - ${committeeChoice === "MOOT_COURT" ? "MOOT Court (Team of 3)" : "Overnight Crisis"}`,
+        description: `MUN Registration - ${committeeChoice === "MOOT_COURT" ? "MOOT Court (3 per team: 2 speakers + 1 researcher)" : "Overnight Crisis"}`,
         order_id: orderId,
         handler: async function (response: any) {
           const verifyResult = await verifyOrderApi.execute("mun/verify-order", {
@@ -63,10 +63,10 @@ export default function MunPaymentButton({
             }),
           });
 
-          if (verifyResult) {
+          if (verifyResult.success) {
             onPaymentSuccess?.();
           } else {
-            onPaymentFailure?.(verifyOrderApi.error || "Payment verification failed");
+            onPaymentFailure?.(verifyResult.error || "Payment verification failed");
           }
         },
         prefill: {

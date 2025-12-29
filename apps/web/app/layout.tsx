@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "@/components/marginals/footer";
 import { baloo, inriaSans, berkshireSwash, calistoga } from "@/fonts";
 import { Toaster } from "sonner";
+import { AuthProvider } from "@/contexts/auth-context";
 export const metadata: Metadata = {
   title: "Nitrutsav 2026 | Literary and Cultural Fest - NIT Rourkela",
   description:

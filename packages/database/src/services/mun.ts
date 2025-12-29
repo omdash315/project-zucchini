@@ -1,8 +1,8 @@
-// @ts-nocheck
+// @ts-nocheck - build fails without this
 
 import { db } from "../index";
-import { munRegistrationsTable, munTransactionsTable, usersTable } from "../schema";
-import { eq, desc } from "drizzle-orm";
+import { munRegistrationsTable, transactionsTable, usersTable } from "../schema";
+import { eq, desc, and } from "drizzle-orm";
 import { MunRegistrationSchema, validateAndThrow, type MunRegistration } from "@repo/shared-types";
 import { getUserByFirebaseUid } from "./user";
 import { munAmount } from "../../../../apps/web/config";
@@ -11,10 +11,16 @@ export const getMunUserByFirebaseUid = async (firebaseUid: string) => {
   const [result] = await db
     .select({
       registration: munRegistrationsTable,
-      transaction: munTransactionsTable,
+      transaction: transactionsTable,
     })
     .from(munRegistrationsTable)
-    .leftJoin(munTransactionsTable, eq(munRegistrationsTable.teamId, munTransactionsTable.teamId))
+    .leftJoin(
+      transactionsTable,
+      and(
+        eq(munRegistrationsTable.teamId, transactionsTable.teamId),
+        eq(transactionsTable.type, "MUN")
+      )
+    )
     .where(eq(munRegistrationsTable.firebaseUid, firebaseUid))
     .limit(1);
 
@@ -208,10 +214,16 @@ export const getPaginatedMunRegistrations = async (pageSize: number = 10, page: 
   const registrations = await db
     .select({
       registration: munRegistrationsTable,
-      transaction: munTransactionsTable,
+      transaction: transactionsTable,
     })
     .from(munRegistrationsTable)
-    .leftJoin(munTransactionsTable, eq(munRegistrationsTable.teamId, munTransactionsTable.teamId))
+    .leftJoin(
+      transactionsTable,
+      and(
+        eq(munRegistrationsTable.teamId, transactionsTable.teamId),
+        eq(transactionsTable.type, "MUN")
+      )
+    )
     .orderBy(desc(munRegistrationsTable.registeredAt))
     .limit(pageSize)
     .offset(offset);
@@ -235,10 +247,16 @@ export const getMunStatistics = async () => {
   const allRegistrations = await db
     .select({
       registration: munRegistrationsTable,
-      transaction: munTransactionsTable,
+      transaction: transactionsTable,
     })
     .from(munRegistrationsTable)
-    .leftJoin(munTransactionsTable, eq(munRegistrationsTable.teamId, munTransactionsTable.teamId));
+    .leftJoin(
+      transactionsTable,
+      and(
+        eq(munRegistrationsTable.teamId, transactionsTable.teamId),
+        eq(transactionsTable.type, "MUN")
+      )
+    );
 
   const total = allRegistrations.length;
   const male = allRegistrations.filter((r) => r.registration.gender === "MALE").length;
@@ -265,10 +283,16 @@ export const getMunTeamsGrouped = async () => {
   const allRegistrations = await db
     .select({
       registration: munRegistrationsTable,
-      transaction: munTransactionsTable,
+      transaction: transactionsTable,
     })
     .from(munRegistrationsTable)
-    .leftJoin(munTransactionsTable, eq(munRegistrationsTable.teamId, munTransactionsTable.teamId))
+    .leftJoin(
+      transactionsTable,
+      and(
+        eq(munRegistrationsTable.teamId, transactionsTable.teamId),
+        eq(transactionsTable.type, "MUN")
+      )
+    )
     .orderBy(desc(munRegistrationsTable.registeredAt));
 
   const teamsMap = new Map<

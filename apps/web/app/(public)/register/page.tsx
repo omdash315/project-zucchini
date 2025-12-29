@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signInWithGoogle, onAuthStateChanged, type User } from "@repo/firebase-config";
+import { signInWithGoogle } from "@repo/firebase-config";
 import { useApi } from "@repo/shared-utils";
+import { useAuth } from "@/contexts/auth-context";
 import {
   LoadingState,
   ProgressBar,
@@ -14,7 +15,7 @@ import {
 
 type RegistrationStep = "auth" | "form" | "payment" | "complete";
 
-interface UserData {
+export interface UserData {
   name: string;
   email: string;
 }
@@ -32,8 +33,8 @@ interface CheckRegistrationResponse {
 }
 
 export default function RegisterPage() {
+  const { user, isLoading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState<RegistrationStep>("auth");
-  const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,42 +43,49 @@ export default function RegisterPage() {
   const { execute: checkRegistration } = useApi<CheckRegistrationResponse>();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(async (firebaseUser) => {
-      setUser(firebaseUser);
+    const checkRegistrationStatus = async () => {
+      if (!user) {
+        setCurrentStep("auth");
+        setIsLoading(false);
+        return;
+      }
 
-      if (firebaseUser) {
-        try {
-          const result = await checkRegistration("check-cross-registration", {
-            method: "GET",
+      try {
+        const result = await checkRegistration("check-cross-registration", {
+          method: "GET",
+        });
+
+        if (result.success && result.data?.isNitrutsavRegistered) {
+          setUserData({
+            name: result.data.name!,
+            email: result.data.email!,
           });
 
-          if (result?.isNitrutsavRegistered) {
-            setUserData({
-              name: result.name!,
-              email: result.email!,
-            });
-
-            if (result.isPaymentVerified || (result.isNitrStudent && result.isVerified)) {
-              setCurrentStep("complete");
-            } else {
-              setCurrentStep("payment");
-            }
+          if (
+            result.data.isPaymentVerified ||
+            (result.data.isNitrStudent && result.data.isVerified)
+          ) {
+            setCurrentStep("complete");
           } else {
-            // User not registered - show form
-            setCurrentStep("form");
+            setCurrentStep("payment");
           }
-        } catch (error) {
-          console.error("Failed to check registration status:", error);
-          // On error, show form
+        } else {
+          // User not registered - show form
           setCurrentStep("form");
         }
+      } catch (error) {
+        console.error("Failed to check registration status:", error);
+        // On error, show form
+        setCurrentStep("form");
       }
 
       setIsLoading(false);
-    });
+    };
 
-    return () => unsubscribe();
-  }, []);
+    if (!authLoading) {
+      checkRegistrationStatus();
+    }
+  }, [user, authLoading]);
 
   const handleGoogleSignIn = async () => {
     setError(null);
@@ -104,26 +112,22 @@ export default function RegisterPage() {
     }
   };
 
-  const handlePaymentSuccess = () => {
-    setCurrentStep("complete");
-  };
-
   const handlePaymentFailure = (errorMessage: string) => {
     setPaymentError(errorMessage);
   };
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return <LoadingState />;
   }
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Register for NITRUTSAV 2026</h1>
         </div>
         <ProgressBar currentStep={currentStep} />
-        <div className="bg-white border border-gray-200 rounded-lg p-8">
+        <div className=" border border-gray-200 rounded-lg p-8">
           {currentStep === "auth" && (
             <AuthStep onGoogleSignIn={handleGoogleSignIn} isLoading={isLoading} error={error} />
           )}
@@ -136,7 +140,6 @@ export default function RegisterPage() {
             <PaymentStep
               userData={userData}
               paymentError={paymentError}
-              onPaymentSuccess={handlePaymentSuccess}
               onPaymentFailure={handlePaymentFailure}
             />
           )}
