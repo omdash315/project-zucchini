@@ -145,6 +145,8 @@ export function useMunRegistration() {
     committeeChoice: string,
     registrationData: MunRegistration
   ) => {
+    toast.info("Registration starting soon... Stay tuned!");
+    return;
     if (committeeChoice === "MOOT_COURT") {
       saveMunIsTeamRegistration(true);
 

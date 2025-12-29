@@ -22,7 +22,22 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           {children}
-          <Toaster position="top-right" richColors />
+          <Toaster
+            position="top-right"
+            richColors
+            toastOptions={{
+              style: {
+                background: "rgba(255, 255, 255, 0.25)",
+                backdropFilter: "blur(9.25px)",
+                border: "2px solid rgba(255, 255, 255, 0.4)",
+                borderRadius: "13px",
+                color: "#fff",
+                fontFamily: "var(--font-inria)",
+                fontWeight: "500",
+              },
+              className: "font-inria",
+            }}
+          />
         </AuthProvider>
       </body>
     </html>

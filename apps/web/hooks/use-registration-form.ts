@@ -94,7 +94,8 @@ export function useRegistrationForm({ user, onComplete }: UseRegistrationFormPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    toast.info("Registration starting soon... Stay tuned!");
+    return;
     // For NITR students, skip validation of permission and undertaking
     if (!isNitrStudent && !validateForm()) {
       return;
