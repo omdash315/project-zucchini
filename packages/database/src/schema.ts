@@ -1,7 +1,7 @@
 import { integer, pgTable, varchar, timestamp, boolean, text, pgEnum } from "drizzle-orm/pg-core";
 
 export const genderEnum = pgEnum("gender", ["MALE", "FEMALE"]);
-export const paymentMethodEnum = pgEnum("payment_method", ["qr", "razorpay"]);
+export const transactionTypeEnum = pgEnum("transaction_type", ["NITRUTSAV", "MUN"]);
 
 export const studentTypeEnum = pgEnum("student_type", ["SCHOOL", "COLLEGE"]);
 export const munCommitteeEnum = pgEnum("mun_committee", [
@@ -48,12 +48,11 @@ export const usersTable = pgTable("users", {
 
 export const transactionsTable = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer()
-    .notNull()
-    .unique()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
-  transactionId: varchar({ length: 255 }).notNull(),
-  paymentMethod: paymentMethodEnum(),
+  userId: integer().references(() => usersTable.id, { onDelete: "cascade" }),
+  teamId: varchar({ length: 36 }),
+  txnId: varchar({ length: 50 }).notNull().unique(),
+  type: transactionTypeEnum().notNull(),
+  amount: integer().notNull(),
   isVerified: boolean().notNull().default(false),
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
@@ -69,21 +68,6 @@ export const adminsTable = pgTable("admins", {
   updatedAt: timestamp().notNull().defaultNow(),
 });
 
-export const razorpayPaymentsTable = pgTable("razorpay_payments", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  transactionId: integer()
-    .notNull()
-    .unique()
-    .references(() => transactionsTable.id, { onDelete: "cascade" }),
-  orderId: varchar({ length: 255 }).notNull(),
-  paymentId: varchar({ length: 255 }).notNull().unique(),
-  signature: varchar({ length: 255 }).notNull(),
-  isVerified: boolean().notNull().default(false),
-  verifiedAt: timestamp(),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
-});
-
 export type User = typeof usersTable.$inferSelect;
 export type NewUser = typeof usersTable.$inferInsert;
 
@@ -92,9 +76,6 @@ export type NewTransaction = typeof transactionsTable.$inferInsert;
 
 export type Admin = typeof adminsTable.$inferSelect;
 export type NewAdmin = typeof adminsTable.$inferInsert;
-
-export type RazorpayPayment = typeof razorpayPaymentsTable.$inferSelect;
-export type NewRazorpayPayment = typeof razorpayPaymentsTable.$inferInsert;
 
 export const munRegistrationsTable = pgTable("mun_registrations", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -134,20 +115,5 @@ export const munRegistrationsTable = pgTable("mun_registrations", {
   updatedAt: timestamp().notNull().defaultNow(),
 });
 
-export const munTransactionsTable = pgTable("mun_transactions", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  teamId: varchar({ length: 36 }).notNull().unique(),
-  transactionId: varchar({ length: 255 }).notNull(),
-  amount: integer().notNull(),
-  paymentMethod: paymentMethodEnum(),
-  paymentScreenshot: text(),
-  isVerified: boolean().notNull().default(false),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp().notNull().defaultNow(),
-});
-
 export type MunRegistration = typeof munRegistrationsTable.$inferSelect;
 export type NewMunRegistration = typeof munRegistrationsTable.$inferInsert;
-
-export type MunTransaction = typeof munTransactionsTable.$inferSelect;
-export type NewMunTransaction = typeof munTransactionsTable.$inferInsert;

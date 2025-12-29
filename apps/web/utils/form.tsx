@@ -28,7 +28,7 @@ export interface BaseSelectFieldConfig {
   label: string;
   placeholder?: string;
   required: boolean;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; schoolAllowed?: boolean }[];
   helperText?: string;
   gridSpan?: "full" | "half";
   readonly?: boolean;
@@ -39,7 +39,7 @@ export interface BaseRadioFieldConfig {
   name: string;
   label: string;
   required: boolean;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; schoolAllowed?: boolean }[];
   gridSpan?: "full" | "half";
   readonly?: boolean;
   disabled?: boolean;

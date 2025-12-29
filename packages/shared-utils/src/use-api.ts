@@ -19,11 +19,17 @@ interface UseApiOptions {
   onError?: (error: string) => void;
 }
 
+interface ExecuteResult<T> {
+  data: T | null;
+  error: string | null;
+  success: boolean;
+}
+
 interface UseApiReturn<T> {
   loading: boolean;
   data: T | null;
   error: string | null;
-  execute: (endpoint: string, options?: RequestInit) => Promise<T | null>;
+  execute: (endpoint: string, options?: RequestInit) => Promise<ExecuteResult<T>>;
 }
 
 async function getAuthToken(): Promise<string | null> {
@@ -42,14 +48,16 @@ export function useApi<T = any>(options?: UseApiOptions): UseApiReturn<T> {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const execute = async (endpoint: string, fetchOptions?: RequestInit): Promise<T | null> => {
+  const execute = async (
+    endpoint: string,
+    fetchOptions?: RequestInit
+  ): Promise<ExecuteResult<T>> => {
     setLoading(true);
     setError(null);
     setData(null);
 
     try {
       const token = await getAuthToken();
-
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
         ...(fetchOptions?.headers as Record<string, string>),
@@ -70,18 +78,18 @@ export function useApi<T = any>(options?: UseApiOptions): UseApiReturn<T> {
         const errorMessage = (result as ApiErrorResponse).error || "An error occurred";
         setError(errorMessage);
         options?.onError?.(errorMessage);
-        return null;
+        return { data: null, error: errorMessage, success: false };
       }
 
       const responseData = (result as ApiResponse<T>).data;
       setData(responseData);
       options?.onSuccess?.(responseData);
-      return responseData;
+      return { data: responseData, error: null, success: true };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Network error";
       setError(errorMessage);
       options?.onError?.(errorMessage);
-      return null;
+      return { data: null, error: errorMessage, success: false };
     } finally {
       setLoading(false);
     }

@@ -57,6 +57,13 @@
       "when": 1766392712701,
       "tag": "0007_melodic_stellaris",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1766778759165,
+      "tag": "0008_shiny_joseph",
+      "breakpoints": true
     }
   ]
 }

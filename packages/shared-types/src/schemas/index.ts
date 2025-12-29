@@ -4,7 +4,7 @@ import { z } from "zod";
  * Blocked institutes list
  * Students from these institutes are not allowed to register
  */
-const notAllowedInstitutes = [
+export const notAllowedInstitutes = [
   "Siksha O Anusandhan",
   "Siksha 'O' Anusandhan",
   'Siksha "O" Anusandhan',
