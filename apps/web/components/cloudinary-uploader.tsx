@@ -17,6 +17,7 @@ interface CloudinaryUploaderProps {
   value?: string;
   onUploadComplete?: (url: string) => void;
   showCopyButton?: boolean;
+  compact?: boolean;
 }
 
 export default function CloudinaryUploader({
@@ -24,6 +25,7 @@ export default function CloudinaryUploader({
   value,
   onUploadComplete,
   showCopyButton = false,
+  compact = false,
 }: CloudinaryUploaderProps = {}) {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -102,10 +104,10 @@ export default function CloudinaryUploader({
     for (const file of filesToUpload) {
       try {
         // Validate file type
-        const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
-        if (!ALLOWED_TYPES.includes(file.type)) {
-          throw new Error("Only JPEG, PNG, WebP images and PDF files are allowed");
-        }
+        // const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+        // if (!ALLOWED_TYPES.includes(file.type)) {
+        //   throw new Error("Only JPEG, PNG, WebP images and PDF files are allowed");
+        // }
 
         // Validate file size (5MB max)
         const MAX_SIZE = 5 * 1024 * 1024;
@@ -174,20 +176,20 @@ export default function CloudinaryUploader({
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className={`w-full ${compact ? "space-y-2" : "space-y-4"}`}>
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
         className={`
-          relative border-2 border-dashed rounded-lg text-center cursor-pointer
-          transition-all duration-200
-          ${maxFiles === 1 ? "p-6" : "p-12"}
+          relative border-2 border-dashed rounded-[13px] text-center cursor-pointer
+          transition-all duration-200 backdrop-blur-[9.25px]
+          ${compact ? "p-3" : maxFiles === 1 ? "p-6" : "p-12"}
           ${
             isDragging
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              ? "border-white bg-white/30"
+              : "border-white/60 hover:border-white bg-white/20 hover:bg-white/25"
           }
           ${isUploading ? "pointer-events-none opacity-60" : ""}
         `}
@@ -201,38 +203,54 @@ export default function CloudinaryUploader({
           accept="image/*,video/*,.pdf,.doc,.docx,.svg"
         />
 
-        <div className="flex flex-col items-center gap-3">
+        <div className={`flex flex-col items-center ${compact ? "gap-1.5" : "gap-3"}`}>
           {isUploading ? (
             <>
               <Loader2
-                className={`${maxFiles === 1 ? "w-8 h-8" : "w-12 h-12"} text-gray-600 animate-spin`}
+                className={`${compact ? "w-6 h-6" : maxFiles === 1 ? "w-8 h-8" : "w-12 h-12"} text-white animate-spin`}
               />
-              <p className="text-gray-700 text-sm">Uploading...</p>
+              <p className="text-white font-semibold text-xs">Uploading...</p>
             </>
           ) : uploadedFiles.length > 0 && maxFiles === 1 ? (
             <>
-              <div className="p-2 bg-green-100 rounded-full">
-                <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+              <div
+                className={`${compact ? "p-1" : "p-2"} bg-green-400/30 backdrop-blur-[9.25px] rounded-full border-2 border-green-400`}
+              >
+                <svg
+                  className={`${compact ? "w-4 h-4" : "w-6 h-6"} text-green-100`}
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-gray-800">File uploaded successfully</p>
-              <p className="text-xs text-gray-500">Click to upload a different file</p>
+              <p className={`${compact ? "text-xs" : "text-sm"} font-semibold text-white`}>
+                Uploaded ✓
+              </p>
+              {!compact && <p className="text-xs text-white/80">Click to change</p>}
             </>
           ) : (
             <>
-              <div className={`p-3 bg-gray-200 rounded-full ${maxFiles === 1 ? "p-2" : "p-3"}`}>
-                <Upload className={`${maxFiles === 1 ? "w-6 h-6" : "w-10 h-10"} text-gray-700`} />
+              <div
+                className={`bg-white/30 backdrop-blur-[9.25px] rounded-full ${compact ? "p-1.5" : maxFiles === 1 ? "p-2" : "p-3"}`}
+              >
+                <Upload
+                  className={`${compact ? "w-4 h-4" : maxFiles === 1 ? "w-6 h-6" : "w-10 h-10"} text-white`}
+                />
               </div>
               <div>
                 <p
-                  className={`${maxFiles === 1 ? "text-base" : "text-lg"} font-medium text-gray-800 mb-1`}
+                  className={`${compact ? "text-xs" : maxFiles === 1 ? "text-base" : "text-lg"} font-semibold text-white ${compact ? "" : "mb-1"}`}
                 >
-                  Drop {maxFiles === 1 ? "file" : "files"} here or click to browse
+                  {compact
+                    ? "Click to upload"
+                    : `Drop ${maxFiles === 1 ? "file" : "files"} here or click`}
                 </p>
-                <p className="text-sm text-gray-500">
-                  Supports images (including SVG), videos, and documents
-                </p>
+                {!compact && (
+                  <p className="text-sm text-white/80">
+                    Supports images (including SVG), videos, and documents
+                  </p>
+                )}
               </div>
             </>
           )}
@@ -240,35 +258,35 @@ export default function CloudinaryUploader({
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <X className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+        <div className="bg-red-500/20 border-2 border-red-400 rounded-[13px] backdrop-blur-[9.25px] p-4 flex items-start gap-3">
+          <X className="w-5 h-5 text-red-200 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-red-800">Upload Error</p>
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="font-semibold text-red-100">Upload Error</p>
+            <p className="text-sm text-red-200">{error}</p>
           </div>
           <button
             onClick={() => setError(null)}
-            className="ml-auto text-red-500 hover:text-red-700"
+            className="ml-auto text-red-200 hover:text-red-100"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
       )}
 
-      {uploadedFiles.length > 0 && (
+      {uploadedFiles.length > 0 && !compact && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-800">Uploaded Files</h3>
+          <h3 className="text-lg font-semibold text-white">Uploaded Files</h3>
           <div className="space-y-3">
             {uploadedFiles.map((file) => (
               <div
                 key={file.timestamp}
-                className="bg-white border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
+                className="bg-white/25 border-2 border-white/40 rounded-[13px] backdrop-blur-[9.25px] p-4 hover:bg-white/30 transition-colors"
               >
                 <div className="flex items-start gap-4">
                   {/* File Icon/Preview */}
                   <div className="flex-shrink-0">
                     {file.resourceType === "image" ? (
-                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-white/20">
                         <img
                           src={file.url}
                           alt={file.fileName}
@@ -276,15 +294,15 @@ export default function CloudinaryUploader({
                         />
                       </div>
                     ) : (
-                      <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center">
-                        <FileText className="w-8 h-8 text-gray-600" />
+                      <div className="w-16 h-16 rounded-lg bg-white/20 flex items-center justify-center">
+                        <FileText className="w-8 h-8 text-white" />
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-800 truncate mb-1">{file.fileName}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="font-semibold text-white truncate mb-1">{file.fileName}</p>
+                    <p className="text-sm text-white/80">
                       {file.format?.toUpperCase() || "FILE"} • {file.resourceType}
                     </p>
                   </div>
@@ -293,11 +311,11 @@ export default function CloudinaryUploader({
                     {showCopyButton && (
                       <button
                         onClick={() => copyToClipboard(file.url)}
-                        className="flex-shrink-0 p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                        className="flex-shrink-0 p-2 text-white/70 hover:text-white hover:bg-white/20 rounded-lg transition-colors"
                         title="Copy URL"
                       >
                         {copiedUrl === file.url ? (
-                          <Check className="w-5 h-5 text-green-500" />
+                          <Check className="w-5 h-5 text-green-300" />
                         ) : (
                           <Copy className="w-5 h-5" />
                         )}
@@ -306,7 +324,7 @@ export default function CloudinaryUploader({
 
                     <button
                       onClick={() => removeFile(file.timestamp)}
-                      className="flex-shrink-0 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      className="flex-shrink-0 p-2 text-white/70 hover:text-red-300 hover:bg-white/20 rounded-lg transition-colors"
                     >
                       <X className="w-5 h-5" />
                     </button>

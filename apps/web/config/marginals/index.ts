@@ -5,18 +5,22 @@ export const navItems = [
   },
   {
     label: "About",
-    href: "/coming-soon",
+    href: "/about",
   },
   {
     label: "Events",
     href: "/coming-soon",
   },
+  // {
+  //   label: "FAQs",
+  //   href: "/coming-soon",
+  // },
   {
-    label: "FAQs",
-    href: "/coming-soon",
+    label: "MUN",
+    href: "/register/mun",
   },
   {
-    label: "Sponsors",
-    href: "/coming-soon",
+    label: "Register",
+    href: "/register",
   },
 ];

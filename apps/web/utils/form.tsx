@@ -28,7 +28,7 @@ export interface BaseSelectFieldConfig {
   label: string;
   placeholder?: string;
   required: boolean;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; schoolAllowed?: boolean }[];
   helperText?: string;
   gridSpan?: "full" | "half";
   readonly?: boolean;
@@ -39,7 +39,7 @@ export interface BaseRadioFieldConfig {
   name: string;
   label: string;
   required: boolean;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; schoolAllowed?: boolean }[];
   gridSpan?: "full" | "half";
   readonly?: boolean;
   disabled?: boolean;
@@ -224,15 +224,15 @@ export function SubmitButton({
   submitText = "Submit",
 }: SubmitButtonProps) {
   return (
-    <div className="flex justify-end pt-4">
+    <div className="flex justify-end pt-2">
       <button
         type="submit"
         disabled={isSubmitting}
-        className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        className="gradient-border-btn px-6 py-2.5 text-white text-base font-semibold hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 "
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin" />
             {loadingText}
           </>
         ) : (
@@ -253,5 +253,9 @@ interface ErrorDisplayProps {
 export function ErrorDisplay({ error }: ErrorDisplayProps) {
   if (!error) return null;
 
-  return <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">{error}</div>;
+  return (
+    <div className="p-3 bg-red-500/20 border-2 border-red-400 rounded-[13px] text-red-200 text-sm backdrop-blur-[9.25px]">
+      {error}
+    </div>
+  );
 }

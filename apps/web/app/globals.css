@@ -4,9 +4,24 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg-image: url("https://res.cloudinary.com/drf3eatfm/image/upload/v1767005164/nitrutsav-2026/gsnj4mjupteth0nktnla.jpg");
+  --rainbow-grad: background: linear-gradient(
+      234deg,
+      #fffabe 0.01%,
+      #e7581f 11.98%,
+      #8d2357 30.15%,
+      #055a44 44.18%,
+      #fb229e 59.46%,
+      #9906be 74.73%,
+      #fff 85.88%
+    );
+}
+
 @theme inline {
   --font-baloo: var(--font-baloo);
   --font-inria: var(--font-inria);
+  --font-berry: var(--font-berry);
 }
 
 /* Hero animations */
@@ -116,17 +131,3 @@
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
-
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
-}
-

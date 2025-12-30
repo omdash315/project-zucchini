@@ -4,7 +4,7 @@ import { z } from "zod";
  * Blocked institutes list
  * Students from these institutes are not allowed to register
  */
-const notAllowedInstitutes = [
+export const notAllowedInstitutes = [
   "Siksha O Anusandhan",
   "Siksha 'O' Anusandhan",
   'Siksha "O" Anusandhan',
@@ -136,6 +136,8 @@ export const RegistrationSchema = z.object({
   }),
 
   undertaking: z.string().url(MESSAGES.REQUIRED("Undertaking document")),
+
+  wantsAccommodation: z.boolean().optional().default(false),
 
   // transactionID: z.string().min(1, MESSAGES.REQUIRED("Transaction ID")),
 

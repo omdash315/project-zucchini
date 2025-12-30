@@ -1,13 +1,14 @@
-// @ts-nocheck
+// @ts-nocheck - build fails without this
 
 import { db } from "../index";
-import {
-  usersTable,
-  transactionsTable,
-  munRegistrationsTable,
-  munTransactionsTable,
-  adminsTable,
-} from "../schema";
+import { usersTable, transactionsTable, munRegistrationsTable, adminsTable } from "../schema";
+
+function generateTxnId(type: "NITRUTSAV" | "MUN"): string {
+  const prefix = type === "NITRUTSAV" ? "NU26" : "MUN26";
+  const timestamp = Date.now();
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `${prefix}-${timestamp}-${random}`;
+}
 
 export type SeedData = {
   users?: Array<{
@@ -27,9 +28,8 @@ export type SeedData = {
     isVerified?: boolean;
   }>;
   transactions?: Array<{
-    userEmail: string; // Reference by email
-    transactionId: string;
-    paymentMethod?: "qr" | "razorpay";
+    userEmail: string;
+    amount: number;
     isVerified?: boolean;
   }>;
   munRegistrations?: Array<{
@@ -76,10 +76,7 @@ export type SeedData = {
   }>;
   munTransactions?: Array<{
     teamId: string;
-    transactionId: string;
     amount: number;
-    paymentMethod?: "qr" | "razorpay";
-    paymentScreenshot?: string;
     isVerified?: boolean;
   }>;
   admins?: Array<{
@@ -160,8 +157,9 @@ export const seedDatabase = async (data: SeedData) => {
       try {
         await db.insert(transactionsTable).values({
           userId,
-          transactionId: tx.transactionId,
-          paymentMethod: tx.paymentMethod || null,
+          txnId: generateTxnId("NITRUTSAV"),
+          type: "NITRUTSAV",
+          amount: tx.amount,
           isVerified: tx.isVerified ?? false,
         });
         results.transactions++;
@@ -207,16 +205,15 @@ export const seedDatabase = async (data: SeedData) => {
     }
   }
 
-  // Seed MUN transactions
+  // Seed MUN transactions (using unified transactions table)
   if (data.munTransactions && data.munTransactions.length > 0) {
     for (const tx of data.munTransactions) {
       try {
-        await db.insert(munTransactionsTable).values({
+        await db.insert(transactionsTable).values({
           teamId: tx.teamId,
-          transactionId: tx.transactionId,
+          txnId: generateTxnId("MUN"),
+          type: "MUN",
           amount: tx.amount,
-          paymentMethod: tx.paymentMethod || null,
-          paymentScreenshot: tx.paymentScreenshot || null,
           isVerified: tx.isVerified ?? false,
         });
         results.munTransactions++;

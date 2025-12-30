@@ -1,5 +1,14 @@
-import { H1, H2, P } from "@repo/ui/core/typography";
 import type { Metadata } from "next";
+import {
+  LegalPageLayout,
+  LegalHeader,
+  LegalContent,
+  LegalSectionTitle,
+  LegalParagraph,
+  LegalList,
+  LegalInfoBox,
+  LegalContactBox,
+} from "../../../components/legal";
 
 export const metadata: Metadata = {
   title: "Code of Conduct | Nitrutsav 2026",
@@ -9,136 +18,111 @@ export const metadata: Metadata = {
 
 export default function CodeOfConductPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <section className="bg-gray-50 py-16 px-6">
-        <div className="max-w-4xl mx-auto">
-          <H1 className="text-slate-900 mb-4">Code of Conduct</H1>
-          <p className="text-slate-600">Last updated: 15th December, 2025</p>
-        </div>
-      </section>
+    <LegalPageLayout>
+      <LegalHeader title="Code of Conduct" />
 
-      <section className="py-12 px-6">
-        <div className="max-w-4xl mx-auto prose prose-slate">
-          <P className="text-slate-700 leading-relaxed mb-6">
-            This Code of Conduct outlines our expectations for all participants at Nitrutsav 2026.
-            We are committed to providing a welcoming, safe, and inclusive environment for everyone.
-          </P>
+      <LegalContent>
+        <LegalParagraph className="mt-10">
+          This Code of Conduct outlines our expectations for all participants at Nitrutsav 2026. We
+          are committed to providing a welcoming, safe, and inclusive environment for everyone.
+        </LegalParagraph>
 
-          <H2 className="text-slate-900 mt-12 mb-6">Expected Behavior</H2>
-          <P className="text-slate-700 leading-relaxed mb-4">All participants are expected to:</P>
-          <ul className="list-disc pl-6 space-y-3 text-slate-700 mb-6">
-            <li>Be respectful and considerate of others</li>
-            <li>Communicate openly and thoughtfully with fellow participants</li>
-            <li>Respect the boundaries and personal space of others</li>
-            <li>Be collaborative and supportive</li>
-            <li>Alert event organizers if you notice violations of this Code of Conduct</li>
-            <li>Follow all venue rules and regulations</li>
-            <li>Respect the cultural and artistic performances</li>
-          </ul>
+        <LegalSectionTitle>Expected Behavior</LegalSectionTitle>
+        <LegalParagraph className="mb-4">All participants are expected to:</LegalParagraph>
+        <LegalList
+          className="space-y-3"
+          items={[
+            "Be respectful and considerate of others",
+            "Communicate openly and thoughtfully with fellow participants",
+            "Respect the boundaries and personal space of others",
+            "Be collaborative and supportive",
+            "Alert event organizers if you notice violations of this Code of Conduct",
+            "Follow all venue rules and regulations",
+            "Respect the cultural and artistic performances",
+          ]}
+        />
 
-          <H2 className="text-slate-900 mt-12 mb-6">Unacceptable Behavior</H2>
-          <P className="text-slate-700 leading-relaxed mb-4">
-            The following behaviors are considered unacceptable:
-          </P>
-          <ul className="list-disc pl-6 space-y-3 text-slate-700 mb-6">
-            <li>Harassment, intimidation, or discrimination in any form</li>
-            <li>Physical or verbal abuse</li>
-            <li>Unwelcome sexual attention or advances</li>
-            <li>Disruptive behavior during events or performances</li>
-            <li>Damage to venue property or equipment</li>
-            <li>Possession or use of illegal substances</li>
-            <li>Violation of photography or recording policies</li>
-            <li>Any behavior that creates an unsafe environment</li>
-          </ul>
+        <LegalSectionTitle>Unacceptable Behavior</LegalSectionTitle>
+        <LegalParagraph className="mb-4">
+          The following behaviors are considered unacceptable:
+        </LegalParagraph>
+        <LegalList
+          className="space-y-3"
+          items={[
+            "Harassment, intimidation, or discrimination in any form",
+            "Physical or verbal abuse",
+            "Unwelcome sexual attention or advances",
+            "Disruptive behavior during events or performances",
+            "Damage to venue property or equipment",
+            "Possession or use of illegal substances",
+            "Violation of photography or recording policies",
+            "Any behavior that creates an unsafe environment",
+          ]}
+        />
 
-          <H2 className="text-slate-900 mt-12 mb-6">Consequences</H2>
-          <P className="text-slate-700 leading-relaxed mb-6">
-            Participants who engage in unacceptable behavior may be asked to stop immediately. If
-            the behavior continues, organizers reserve the right to take appropriate action,
-            including:
-          </P>
-          <ul className="list-disc pl-6 space-y-3 text-slate-700 mb-6">
-            <li>Warning the participant</li>
-            <li>Expulsion from the event without refund</li>
-            <li>Reporting to appropriate authorities if necessary</li>
-            <li>Banning from future Nitrutsav events</li>
-          </ul>
+        <LegalSectionTitle>Consequences</LegalSectionTitle>
+        <LegalParagraph>
+          Participants who engage in unacceptable behavior may be asked to stop immediately. If the
+          behavior continues, organizers reserve the right to take appropriate action, including:
+        </LegalParagraph>
+        <LegalList
+          className="space-y-3"
+          items={[
+            "Warning the participant",
+            "Expulsion from the event without refund",
+            "Reporting to appropriate authorities if necessary",
+            "Banning from future Nitrutsav events",
+          ]}
+        />
 
-          <H2 className="text-slate-900 mt-12 mb-6">Reporting</H2>
-          <P className="text-slate-700 leading-relaxed mb-6">
-            If you experience or witness unacceptable behavior, or have any concerns, please report
-            it immediately to event organizers. You can contact us at:
-          </P>
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-6">
-            <p className="text-slate-700 mb-2">
-              <strong>Email:</strong>{" "}
-              <a
-                href="mailto:team@nitrutsav.in"
-                className="text-blue-600 hover:text-blue-700 font-semibold"
-              >
-                team@nitrutsav.in
-              </a>
-            </p>
-            <p className="text-slate-700 mb-2">
-              <strong>Convenors:</strong>
-            </p>
-            <ul className="list-none pl-4 space-y-1 text-slate-700">
-              <li>
-                Sidheswar Mahananda:{" "}
-                <a href="tel:6371872187" className="text-blue-600 hover:text-blue-700">
-                  6371872187
-                </a>
-              </li>
-              <li>
-                Shiba Nanda Sethy:{" "}
-                <a href="tel:7682866577" className="text-blue-600 hover:text-blue-700">
-                  7682866577
-                </a>
-              </li>
-            </ul>
-            <p className="text-slate-700 mt-2">
-              <strong>Organizing Team:</strong>
-            </p>
-            <ul className="list-none pl-4 space-y-1 text-slate-700">
-              <li>
-                Debadutta Nayak:{" "}
-                <a href="tel:7855034580" className="text-blue-600 hover:text-blue-700">
-                  7855034580
-                </a>
-              </li>
-            </ul>
-          </div>
+        <LegalSectionTitle>Reporting</LegalSectionTitle>
+        <LegalParagraph>
+          If you experience or witness unacceptable behavior, or have any concerns, please report it
+          immediately to event organizers. You can contact us at:
+        </LegalParagraph>
+        <LegalContactBox
+          email="team@nitrutsav.in"
+          contacts={[
+            {
+              group: "Convenors",
+              people: [
+                { label: "Convenor", name: "Sidheswar Mahananda", phone: "6371872187" },
+                { label: "Convenor", name: "Shiba Nanda Sethy", phone: "7682866577" },
+              ],
+            },
+            {
+              group: "Organizing Team",
+              people: [{ label: "Organizer", name: "Debadutta Nayak", phone: "7855034580" }],
+            },
+          ]}
+        />
 
-          <H2 className="text-slate-900 mt-12 mb-6">Safety and Security</H2>
-          <P className="text-slate-700 leading-relaxed mb-6">
-            Your safety is our priority. Event organizers and security personnel will be present
-            throughout the venue. In case of emergency, please contact the nearest organizer or
-            security personnel immediately.
-          </P>
+        <LegalSectionTitle>Safety and Security</LegalSectionTitle>
+        <LegalParagraph>
+          Your safety is our priority. Event organizers and security personnel will be present
+          throughout the venue. In case of emergency, please contact the nearest organizer or
+          security personnel immediately.
+        </LegalParagraph>
 
-          <H2 className="text-slate-900 mt-12 mb-6">Photography and Recording</H2>
-          <P className="text-slate-700 leading-relaxed mb-6">
-            Photography and video recording may be permitted in designated areas. Please respect
-            performers' and participants' rights. Professional photography or recording for
-            commercial purposes requires prior permission from organizers.
-          </P>
+        <LegalSectionTitle>Photography and Recording</LegalSectionTitle>
+        <LegalParagraph>
+          Photography and video recording may be permitted in designated areas. Please respect
+          performers' and participants' rights. Professional photography or recording for commercial
+          purposes requires prior permission from organizers.
+        </LegalParagraph>
 
-          <H2 className="text-slate-900 mt-12 mb-6">Acknowledgment</H2>
-          <P className="text-slate-700 leading-relaxed mb-6">
-            By participating in Nitrutsav 2026, you acknowledge that you have read and agree to
-            abide by this Code of Conduct. We appreciate your cooperation in making Nitrutsav 2026 a
-            safe, welcoming, and enjoyable experience for everyone.
-          </P>
+        <LegalSectionTitle>Acknowledgment</LegalSectionTitle>
+        <LegalParagraph>
+          By participating in Nitrutsav 2026, you acknowledge that you have read and agree to abide
+          by this Code of Conduct. We appreciate your cooperation in making Nitrutsav 2026 a safe,
+          welcoming, and enjoyable experience for everyone.
+        </LegalParagraph>
 
-          <div className="bg-gray-50 border-l-4 border-blue-500 p-6 mt-8">
-            <p className="text-blue-900 font-semibold mb-2">Remember:</p>
-            <p className="text-blue-800">
-              Nitrutsav 2026 is a celebration of culture, creativity, and community. Let's work
-              together to create an inclusive and memorable experience for all participants.
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
+        <LegalInfoBox title="Remember:">
+          Nitrutsav 2026 is a celebration of culture, creativity, and community. Let's work together
+          to create an inclusive and memorable experience for all participants.
+        </LegalInfoBox>
+      </LegalContent>
+    </LegalPageLayout>
   );
 }

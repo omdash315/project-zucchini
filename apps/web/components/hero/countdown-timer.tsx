@@ -40,26 +40,26 @@ export default function CountdownTimer() {
 
   return (
     <div className="flex justify-center mt-4 md:mt-0 md:absolute md:top-[2.5rem] md:right-[10rem]">
-      <div className="flex items-start gap-[1vw] text-white font-[family-name:var(--font-baloo)]">
+      <div className="flex items-start gap-[1vw] text-white font-berry">
         {/* Days */}
         <div className="flex flex-col items-center">
-          <span className="text-4xl md:text-[3.5vw] font-bold leading-none">{timeLeft.days}</span>
+          <span className="text-4xl md:text-[2.5vw] font-bold leading-none">{timeLeft.days}</span>
           <span className="text-sm md:text-[1.5vw] font-bold mt-1">DAYS</span>
         </div>
-        <span className="text-4xl md:text-[3.5vw] font-bold leading-none mt-[-0.5vw]">:</span>
+        <span className="text-4xl md:text-[2.5vw] font-bold leading-none mt-[-0.5vw]">:</span>
 
         {/* Hours */}
         <div className="flex flex-col items-center">
-          <span className="text-4xl md:text-[3.5vw] font-bold leading-none">
+          <span className="text-4xl md:text-[2.5vw] font-bold leading-none">
             {timeLeft.hours.toString().padStart(2, "0")}
           </span>
           <span className="text-sm md:text-[1.5vw] font-bold mt-1">HOURS</span>
         </div>
-        <span className="text-4xl md:text-[3.5vw] font-bold leading-none mt-[-0.5vw]">:</span>
+        <span className="text-4xl md:text-[2.5vw] font-bold leading-none mt-[-0.5vw]">:</span>
 
         {/* Minutes */}
         <div className="flex flex-col items-center">
-          <span className="text-4xl md:text-[3.5vw] font-bold leading-none">
+          <span className="text-4xl md:text-[2.5vw] font-bold leading-none">
             {timeLeft.minutes.toString().padStart(2, "0")}
           </span>
           <span className="text-sm md:text-[1.5vw] font-bold mt-1">MINUTES</span>

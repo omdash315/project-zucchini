@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { notAllowedInstitutes } from "./index";
 
 const PATTERNS = {
   NAME: /^[a-zA-Z\s]+$/,
@@ -9,7 +10,35 @@ const PATTERNS = {
 const MESSAGES = {
   REQUIRED: (field: string) => `${field} is required`,
   INVALID: (field: string) => `Invalid ${field.toLowerCase()}`,
+  INSTITUTE_BANNED:
+    "Students from this institute/university have been officially barred from participating in NITRUTSAV'26",
 };
+
+/**
+ * Check if text contains any banned keywords
+ */
+const containsBannedKeyword = (text: string): boolean => {
+  const normalizedText = text
+    .toLowerCase()
+    .replace(/['\"`\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  return notAllowedInstitutes.some((keyword) => normalizedText.includes(keyword));
+};
+
+const instituteValidation = z
+  .string()
+  .min(1, MESSAGES.REQUIRED("Institute name"))
+  .refine((val) => !containsBannedKeyword(val), {
+    message: MESSAGES.INSTITUTE_BANNED,
+  });
+
+const universityValidation = z
+  .string()
+  .min(1, MESSAGES.REQUIRED("University/Board"))
+  .refine((val) => !containsBannedKeyword(val), {
+    message: MESSAGES.INSTITUTE_BANNED,
+  });
 
 export const MunRegistrationSchema = z
   .object({
@@ -32,8 +61,8 @@ export const MunRegistrationSchema = z
     studentType: z.enum(["SCHOOL", "COLLEGE"], {
       errorMap: () => ({ message: "Student type is required" }),
     }),
-    institute: z.string().min(1, MESSAGES.REQUIRED("Institute name")),
-    university: z.string().min(1, MESSAGES.REQUIRED("University/Board")),
+    institute: instituteValidation,
+    university: universityValidation,
     city: z.string().min(1, MESSAGES.REQUIRED("City")),
     state: z.string().min(1, MESSAGES.REQUIRED("State")),
     rollNumber: z.string().min(1, MESSAGES.REQUIRED("Roll number")),
@@ -80,18 +109,17 @@ export const MunRegistrationSchema = z
   })
   .refine(
     (data) => {
-      // School students cannot register for Overnight Crisis Committees
-      const overnightCrisisCommittees = ["UNSC_OVERNIGHT_CRISIS", "AIPPM_OVERNIGHT_CRISIS"];
-      if (
-        data.studentType === "SCHOOL" &&
-        overnightCrisisCommittees.includes(data.committeeChoice)
-      ) {
+      // School students can only participate in: UNHRC, DISEC, AIPPM, ECOSOC, IP
+      // They cannot register for Overnight Crisis Committees or Moot Court
+      const restrictedForSchool = ["UNSC_OVERNIGHT_CRISIS", "AIPPM_OVERNIGHT_CRISIS", "MOOT_COURT"];
+      if (data.studentType === "SCHOOL" && restrictedForSchool.includes(data.committeeChoice)) {
         return false;
       }
       return true;
     },
     {
-      message: "School students are not eligible for Overnight Crisis Committees",
+      message:
+        "School students can only participate in UNHRC, DISEC, AIPPM, ECOSOC, and IP committees",
       path: ["committeeChoice"],
     }
   )

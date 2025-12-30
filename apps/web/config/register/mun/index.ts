@@ -1,6 +1,7 @@
 import type { MunRegistration } from "@repo/shared-types";
 import type { FieldConfig } from "@/utils/form";
-
+export const PORTFOLIO_MATRIX_URL =
+  "https://docs.google.com/spreadsheets/d/1EfXSS9iMJWb6S9b9GvOlaqz4LFIpiGVEv2qZe44EG8Q/edit?usp=drivesdk";
 // Basic Information Fields
 export const basicInfoFields: FieldConfig[] = [
   {
@@ -110,15 +111,27 @@ export const munDetailsFields: FieldConfig[] = [
     placeholder: "Select a committee",
     required: true,
     options: [
-      { value: "UNHRC", label: "UNHRC" },
-      { value: "UNGA_DISEC", label: "UNGA DISEC" },
-      { value: "ECOSOC", label: "ECOSOC" },
-      { value: "AIPPM", label: "AIPPM" },
-      { value: "IP_PHOTOGRAPHER", label: "IP - Photographer" },
-      { value: "IP_JOURNALIST", label: "IP - Journalist" },
-      { value: "UNSC_OVERNIGHT_CRISIS", label: "UNSC - Overnight Crisis Committee" },
-      { value: "AIPPM_OVERNIGHT_CRISIS", label: "AIPPM - Overnight Crisis Committee" },
-      { value: "MOOT_COURT", label: "MOOT Court (Team of 3)" },
+      { value: "UNHRC", label: "UNHRC", schoolAllowed: true },
+      { value: "UNGA_DISEC", label: "UNGA DISEC", schoolAllowed: true },
+      { value: "ECOSOC", label: "ECOSOC", schoolAllowed: true },
+      { value: "AIPPM", label: "AIPPM", schoolAllowed: true },
+      { value: "IP_PHOTOGRAPHER", label: "IP - Photographer", schoolAllowed: true },
+      { value: "IP_JOURNALIST", label: "IP - Journalist", schoolAllowed: true },
+      {
+        value: "UNSC_OVERNIGHT_CRISIS",
+        label: "UNSC - Overnight Crisis Committee",
+        schoolAllowed: false,
+      },
+      {
+        value: "AIPPM_OVERNIGHT_CRISIS",
+        label: "AIPPM - Overnight Crisis Committee",
+        schoolAllowed: false,
+      },
+      {
+        value: "MOOT_COURT",
+        label: "MOOT Court (3 per team: 2 speakers + 1 researcher)",
+        schoolAllowed: false,
+      },
     ],
     gridSpan: "full",
   },
