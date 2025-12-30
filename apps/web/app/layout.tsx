@@ -4,6 +4,7 @@ import { fonts } from "@/fonts";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/contexts/auth-context";
 import Header from "../components/marginals/navbar2";
+import Footer from "../components/marginals/footer";
 export const metadata: Metadata = {
   title: "Nitrutsav 2026 | Literary and Cultural Fest - NIT Rourkela",
   description:
@@ -22,6 +23,7 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           {children}
+          <Footer />
           <Toaster
             position="top-right"
             richColors
