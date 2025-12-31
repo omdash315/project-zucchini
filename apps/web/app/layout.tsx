@@ -24,7 +24,7 @@ export default function RootLayout({
           {/* <Loader /> */}
           <Header />
           {children}
-          <Footer />
+          {/* <Footer /> */}
           <Toaster
             position="top-right"
             richColors

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { HERO_IMAGES, PARALLAX_MOUSE, PARALLAX_SCROLL, TRANSITIONS } from "./config";
+import { HERO_IMAGES, PARALLAX_MOUSE, PARALLAX_SCROLL, TRANSITIONS } from "@/config/hero";
 
 interface ParallaxLayerProps {
   mouse: { x: number; y: number };

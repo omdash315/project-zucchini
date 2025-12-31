@@ -19,8 +19,8 @@ const MainButton = forwardRef<HTMLButtonElement, MainButtonProps>(
         ref={ref}
         className={cn(
           "relative flex items-center justify-center",
-          "h-[84px] w-[308px] rounded-[48px]",
-          "border-[6px] border-[#fffabe]",
+          "h-[60px] w-[308px] rounded-[48px]",
+          "backdrop-blur-sm",
           "px-6 py-4",
           "font-inria text-[32px] font-bold text-white",
           "transition-all duration-300 ease-out",
@@ -34,7 +34,6 @@ const MainButton = forwardRef<HTMLButtonElement, MainButtonProps>(
         }}
         {...props}
       >
-        {/* Inner glow effect on hover */}
         <span
           className={cn(
             "absolute -inset-0.5 rounded-[48px] pointer-events-none transition-opacity duration-300",

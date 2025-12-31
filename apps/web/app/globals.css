@@ -683,7 +683,52 @@ html::-webkit-scrollbar {
   background-attachment: scroll;
 }
 
-.hero-layer-bg2 {
-  /* background-size: 100%; */
-  /* background-position: center; */
+.primary-button-gradient {
+  position: relative;
+  --border-width: 0.8px;
+  --border-radius: 0px;
+  --bg-color: rgba(217, 217, 217, 0.18);
+  --gradient-angle: 90deg;
+
+  border-radius: var(--border-radius);
+  background: var(--bg-color);
+  backdrop-filter: blur(2.576474666595459px);
+}
+
+.primary-button-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius);
+  padding: var(--border-width);
+  background: linear-gradient(
+    var(--gradient-angle),
+    #fffabe 0%,
+    #e7581f 20%,
+    #8d2357 40%,
+    #055a44 60%,
+    #fb229e 80%,
+    #9906be 90%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.primary-button {
+  display: flex;
+  width: 308px;
+  height: 84px;
+  padding: 16px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  border-radius: 48px;
+  background: linear-gradient(86deg, rgba(170, 22, 126, 0.51) -2.5%, rgba(62, 113, 217, 0.51) 100%);
 }
