@@ -102,7 +102,7 @@ export function PeacockBehindLayer({ mouse, scrollY }: ParallaxLayerProps) {
 export function GirlLayer({ mouse, scrollY }: ParallaxLayerProps) {
   return (
     <div
-      className="absolute left-1/2 -bottom-0 lsm:bottom-[-15vw] md:bottom-[-5vw] h-[150vw] w-[150vw] ssm:h-[120vw] ssm:w-[120vw] lsm:h-[90vw] lmd:h-[40vw] lsm:w-[90vw] llsmd:w-[80vw] llsmd:h-[80vw] llmd:w-[70vw] md:w-[60vw] z-[30] pointer-events-none"
+      className="absolute left-1/2 -bottom-0 lsm:bottom-[-30vw] md:bottom-[-5vw] h-[150vw] w-[150vw] ssm:h-[120vw] ssm:w-[120vw] lsm:h-[90vw] lmd:h-[40vw] lsm:w-[90vw] llsmd:w-[80vw] llsmd:h-[80vw] llmd:w-[70vw] md:w-[60vw] z-[30] pointer-events-none"
       style={{
         transform: `translateX(-50%) translate(${mouse.x * PARALLAX_MOUSE.girl.x}vw, ${mouse.y * PARALLAX_MOUSE.girl.y}vw) translateY(${scrollY * PARALLAX_SCROLL.girl}px)`,
         transition: `transform ${TRANSITIONS.girl}s ease-out`,
