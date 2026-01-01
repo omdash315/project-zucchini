@@ -19,6 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <meta name="theme-color" content="#bf2d7e" />
+
       <body className={`${fonts}`}>
         <AuthProvider>
           {/* <Loader /> */}

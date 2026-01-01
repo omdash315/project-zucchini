@@ -5,7 +5,7 @@ import { Fireworks } from "@fireworks-js/react";
 export default function FireworksEffects() {
   const fireworksOptions: any = {
     rocketsPoint: { min: 0, max: 100 },
-    intensity: 15,
+    intensity: 10,
     explosion: 4,
     traceLength: 3,
     colors: ["#FFD700", "#FFC107", "#FFB300", "#FFF3B0"],

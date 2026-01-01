@@ -3,6 +3,7 @@
 import { useApi } from "@repo/shared-utils";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import Button from "../ui/button";
 
 interface RegistrationPaymentButtonProps {
   userName: string;
@@ -74,19 +75,20 @@ export default function RegistrationPaymentButton({
   };
 
   return (
-    <button
+    <Button
       onClick={handleSubmit}
       disabled={isLoading}
-      className="gradient-border-btn px-6 py-2.5 text-white text-base font-semibold hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+      className="h-[75px] w-[275px] flex items-center"
     >
-      {isLoading ? (
-        <>
-          <Loader2 className="w-5 h-5 animate-spin" />
-          Processing...
-        </>
-      ) : (
-        "Proceed to Payment"
-      )}
-    </button>
+      <span className="text-lg">
+        {isLoading ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+          </>
+        ) : (
+          "Proceed to Payment"
+        )}
+      </span>
+    </Button>
   );
 }

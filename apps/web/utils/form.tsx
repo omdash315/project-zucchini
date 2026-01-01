@@ -2,6 +2,7 @@ import { JSX, useState } from "react";
 import { z } from "zod";
 import { InputField, SelectField, RadioGroup } from "../components/ui";
 import { Loader2 } from "lucide-react";
+import Button from "@/components/ui/button";
 
 /**
  * Generic form errors type
@@ -225,20 +226,22 @@ export function SubmitButton({
 }: SubmitButtonProps) {
   return (
     <div className="flex justify-end pt-2">
-      <button
+      <Button
         type="submit"
         disabled={isSubmitting}
-        className="gradient-border-btn px-6 py-2.5 text-white text-base font-semibold hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 "
+        className="h-[75px] w-[250px] flex items-center"
       >
-        {isSubmitting ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            {loadingText}
-          </>
-        ) : (
-          submitText
-        )}
-      </button>
+        <span className="text-lg">
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {loadingText}
+            </>
+          ) : (
+            submitText
+          )}
+        </span>
+      </Button>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { NitrCheckbox } from "./nitr-checkbox";
 import { CollegeInfoSection } from "./college-info-section";
 import { MunDetailsSection } from "./mun-details-section";
 import { MUN_FEE } from "@/config";
+import Button from "@/components/ui/button";
 
 interface MunRegistrationFormProps {
   user: User;
@@ -233,13 +234,11 @@ export default function MunRegistrationForm({
         )}
 
         <div className={onBack ? "" : "ml-auto"}>
-          <button
-            type="submit"
-            disabled={false}
-            className="gradient-border-btn px-6 py-2.5 text-white text-base font-semibold hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {getButtonText(formData.committeeChoice, hideCommitteeChoice, buttonText)}
-          </button>
+          <Button type="submit" disabled={false} className="h-[75px] w-[275px] flex items-center">
+            <span className="text-lg">
+              {getButtonText(formData.committeeChoice, hideCommitteeChoice, buttonText)}
+            </span>
+          </Button>
         </div>
       </div>
     </form>

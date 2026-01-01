@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/ui/button";
 import { ArrowRight, Users, Award, BookOpen, Globe } from "lucide-react";
 
 interface MunInfoStepProps {
@@ -46,34 +47,10 @@ export function MunInfoStep({ onProceedToRegister }: MunInfoStepProps) {
         </div>
       </div>
 
-      {/* Features Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-          <Globe className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-          <p className="text-white/90 text-sm font-inria">Global Simulations</p>
-        </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-          <Users className="w-8 h-8 text-green-400 mx-auto mb-2" />
-          <p className="text-white/90 text-sm font-inria">Networking</p>
-        </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-          <BookOpen className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-          <p className="text-white/90 text-sm font-inria">Research & Debate</p>
-        </div>
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-          <Award className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-          <p className="text-white/90 text-sm font-inria">Leadership Skills</p>
-        </div>
-      </div>
-
       {/* Register Button */}
-      <button
-        onClick={onProceedToRegister}
-        className="gradient-border-btn group inline-flex items-center gap-3 px-8 py-4 text-white font-semibold hover:bg-white/30 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] font-inria"
-      >
+      <Button onClick={onProceedToRegister} className="h-[75px] w-[275px] flex items-center">
         <span className="text-lg">Register Now</span>
-        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-      </button>
+      </Button>
     </div>
   );
 }

@@ -35,15 +35,13 @@ export default function Hero() {
       <Parrot mouse={mouse} scrollY={scrollY} />
       <OwlRightDecorationLayer mouse={mouse} scrollY={scrollY} />
 
-      {/* <PeacockBehindLayer mouse={mouse} scrollY={scrollY} /> */}
-
       <LogoLayer mouse={mouse} scrollY={scrollY}>
         <LightStrings />
       </LogoLayer>
 
       <GirlLayer mouse={mouse} scrollY={scrollY} />
 
-      <div className="absolute md:bottom-20 bottom-10 left-1/2 -translate-x-1/2 z-50">
+      <div className="absolute md:bottom-30 bottom-30 left-1/2 -translate-x-1/2 z-50">
         <Link href="/register">
           <Button className="h-[75px] w-[275px]">Register Now</Button>
         </Link>
