@@ -42,9 +42,9 @@ export default function InputField({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={name} className="block text-sm font-medium font-inria text-white mb-0.5">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="asterisk-icon ml-1">*</span>}
       </label>
       <input
         type={type}
@@ -56,12 +56,10 @@ export default function InputField({
         required={required}
         maxLength={maxLength}
         readOnly={readonly}
-        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-          error ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`w-full px-3 py-2 text-sm focus:outline-none input-field font-semibold ${error ? "border-red-500" : "border-gray-300 "}`}
       />
-      {helperText && <p className="mt-1 text-xs text-gray-500">{helperText}</p>}
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {helperText && <p className="mt-0.5 text-xs text-white/80">{helperText}</p>}
+      {error && <p className="mt-0.5 text-xs text-red-400">{error}</p>}
     </div>
   );
 }

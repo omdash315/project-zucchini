@@ -1,9 +1,9 @@
-import Hero from "@/components/hero/hero";
+import DummyHero from "@/components/hero/dummy-hero";
 
 export default function Home() {
   return (
     <>
-      <Hero />
+      <DummyHero />
     </>
   );
 }

@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { heroImages } from "@/config/hero";
 
-export default function MusicVisualizer() {
+export default function MusicVisualizer({ className }: { className?: string }) {
   return (
-    <div className="hidden md:block absolute top-[2rem] right-[3rem] size-[4.5vw]">
+    <div className={`hidden md:block relative size-[50px] md:size-[84px] ${className}`}>
       {/* Background Circle */}
       <Image
         width={72}

@@ -30,8 +30,8 @@ export default function RadioGroup({
 }: RadioGroupProps) {
   return (
     <div className={className}>
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
-        {label} {required && <span className="text-red-500">*</span>}
+      <label className="block text-sm font-medium font-inria text-white mb-0.5">
+        {label} {required && <span className="asterisk-icon">*</span>}
       </label>
       <div className="flex gap-4">
         {options.map((option) => (
@@ -43,13 +43,13 @@ export default function RadioGroup({
               checked={value === option.value}
               onChange={(e) => onChange(e.target.value)}
               disabled={readonly || disabled}
-              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+              className="w-4 h-4 accent-white focus:ring-white/50"
             />
-            <span className="ml-2 text-gray-700">{option.label}</span>
+            <span className="ml-2 text-white text-sm font-semibold">{option.label}</span>
           </label>
         ))}
       </div>
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-0.5 text-xs text-red-400">{error}</p>}
     </div>
   );
 }
