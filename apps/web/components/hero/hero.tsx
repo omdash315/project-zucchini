@@ -22,13 +22,10 @@ export default function Hero() {
   const { mouse, scrollY } = useParallax(containerRef);
 
   return (
-    <main
-      ref={containerRef}
-      className="min-h-screen w-full overflow-hidden relative 2xl:max-h-[56.25vw] 2xl:min-h-[56.25vw]"
-    >
+    <main ref={containerRef} className="h-screen w-full relative z-10">
       <FireworksEffect />
 
-      <BackgroundLayer mouse={mouse} scrollY={scrollY} />
+      {/* <BackgroundLayer mouse={mouse} scrollY={scrollY} /> */}
 
       <PeacockLeftLayer mouse={mouse} scrollY={scrollY} />
       <PeacockRightLayer mouse={mouse} scrollY={scrollY} />
@@ -43,10 +40,10 @@ export default function Hero() {
 
       <div className="absolute md:bottom-30 bottom-30 left-1/2 -translate-x-1/2 z-34">
         <Link href="/register">
-          <Button className="h-[75px] w-[275px]">Register Now</Button>
+          <Button className="h-[50px] w-[200px] lg:h-[75px] lg:w-[275px]"></Button>
         </Link>
       </div>
-      <GradientOverlay />
+      {/* <GradientOverlay /> */}
     </main>
   );
 }

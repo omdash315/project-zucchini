@@ -39,7 +39,7 @@ export default function SectionHeading({
     <div
       className={`max-w-5xl mx-auto flex items-center justify-center gap-6 ${containerClassName}`}
     >
-      {showLines && <Lines length={lineLength} className={lineClassName} />}
+      {showLines && <Lines length={lineLength} className={`hidden md:block ${lineClassName}`} />}
       <div className={`gradient-border px-5 py-4 ${className}`} style={customStyles}>
         <h1
           className={cn("whitespace-nowrap font-berry uppercase text-xl text-white", textClassName)}
@@ -47,7 +47,13 @@ export default function SectionHeading({
           {title}
         </h1>
       </div>
-      {showLines && <Lines flowDirection="rtl" length={lineLength} className={lineClassName} />}
+      {showLines && (
+        <Lines
+          flowDirection="rtl"
+          length={lineLength}
+          className={`hidden md:block ${lineClassName}`}
+        />
+      )}
     </div>
   );
 }

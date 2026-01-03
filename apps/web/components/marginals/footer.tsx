@@ -11,15 +11,15 @@ const socialIcons: Record<string, React.ReactNode> = {
 
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-black font-inria overflow-hidden">
+    <footer className="relative w-full font-inria z-10">
       <div className="absolute inset-0 border-t-2 border-l-2 border-r-2 border-white rounded-t-[80px] pointer-events-none z-20 bg-transparent" />
 
-      <div className="absolute inset-0 bg-black">
+      <div className="absolute inset-0">
         <Image
           src={footerImages.background}
           alt="Footer Background"
           fill
-          className="object-cover object-center rounded-t-[80px] pointer-events-none"
+          className="object-cover object-center rounded-t-[80px] pointer-events-none border-2 border-blue-500 bg-black"
           priority={false}
         />
       </div>

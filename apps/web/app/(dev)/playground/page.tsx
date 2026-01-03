@@ -3,7 +3,7 @@
 import Hero from "@/components/hero";
 const Playground = () => {
   return (
-    <div className="hero-bg">
+    <div className="herobg">
       <Hero />
     </div>
   );

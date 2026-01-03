@@ -23,7 +23,7 @@ export function ProgressBar({ currentStep }: ProgressBarProps) {
   const isPaymentOrComplete = currentStep === "payment" || currentStep === "complete";
 
   return (
-    <div className="my-20">
+    <div className="my-8 md:my-20">
       <div className="flex items-center justify-center space-x-3">
         <StepIndicator
           step={1}

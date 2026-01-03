@@ -97,8 +97,8 @@ export function GirlLayer({ mouse, scrollY }: ParallaxLayerProps) {
   return (
     <div
       className={cn(
-        "absolute left-1/2 md:bottom-[-5vw] h-[60vh] w-[60vh] ssm:h-[120vw] ssm:w-[120vw] lsm:h-[90vw] lmd:h-[40vw] lsm:w-[90vw] llsmd:w-[65vw] llsmd:h-[65vw] md:w-[60vw] llmd:w-[70vw]  z-[1] md:z-[30] pointer-events-none",
-        isTallScreen ? "bottom-[10vh] lsm:bottom-0" : "bottom-[2vh] lsm:bottom-0"
+        "absolute left-1/2 md:bottom-[-5vw] h-[60vh] w-[60vh] ssm:h-[120vw] ssm:w-[120vw] lsm:h-[90vw] lmd:h-[40vw] lsm:w-[90vw] llsmd:w-[55vw] llsmd:h-[55vw] md:w-[50vw] llmd:w-[60vw]  z-[1] md:z-[30] pointer-events-none",
+        isTallScreen ? "bottom-[10vh] lsm:bottom-0" : "bottom-0"
       )}
       style={{
         transform: `translateX(-50%) translate(${mouse.x * PARALLAX_MOUSE.girl.x}vw, ${mouse.y * PARALLAX_MOUSE.girl.y}vw) translateY(${scrollY * PARALLAX_SCROLL.girl}px)`,
@@ -129,7 +129,7 @@ export function LogoLayer({
   children,
 }: ParallaxLayerProps & { children?: React.ReactNode }) {
   return (
-    <div className="absolute left-0 right-0 -top-55 lsm:-top-12 llmd:-top-10 llg:-top-50 2xl:-top-80 bottom-0 flex items-center justify-center z-[25] pointer-events-none">
+    <div className="absolute left-0 right-0 pt-20 -top-55 lsm:-top-12 llmd:-top-10 llg:-top-50 2xl:-top-80 bottom-0 flex items-center justify-center z-[25] pointer-events-none">
       <div
         className="flex flex-col items-center 2xl:items-start max-w-[80%] md:max-w-[50%] 2xl:max-w-[50%]"
         style={{

@@ -3,13 +3,17 @@
 * {
   box-sizing: border-box;
 }
+
 body {
   padding: 0;
   margin: 0;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
   overflow-x: hidden;
 }
+
 body::-webkit-scrollbar {
   display: none;
   width: 0;
@@ -38,16 +42,14 @@ html::-webkit-scrollbar {
 
 :root {
   --bg-image: url("https://res.cloudinary.com/drf3eatfm/image/upload/v1767255256/nitrutsav-2026/zrvo2nfffqjgzyo2pghz.webp");
-  --rainbow-grad: background: linear-gradient(
-      234deg,
+  --rainbow-grad: background: linear-gradient(234deg,
       #fffabe 0.01%,
       #e7581f 11.98%,
       #8d2357 30.15%,
       #055a44 44.18%,
       #fb229e 59.46%,
       #9906be 74.73%,
-      #fff 85.88%
-    );
+      #fff 85.88%);
   --animate-spin: spin 1s linear infinite;
 }
 
@@ -209,6 +211,7 @@ html::-webkit-scrollbar {
 }
 
 @keyframes shimmer {
+
   0%,
   90%,
   to {
@@ -276,6 +279,7 @@ html::-webkit-scrollbar {
 
 /* Hot air balloon floating animation */
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0px);
@@ -314,15 +318,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -352,15 +354,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -403,6 +403,7 @@ html::-webkit-scrollbar {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
 .step-indicator-active {
   border-radius: 33px;
   background: rgba(255, 255, 255, 0.16);
@@ -418,10 +419,16 @@ html::-webkit-scrollbar {
 }
 
 .step-indicator-progress-bar {
-  width: 92px;
+  width: 30px;
   height: 1px;
   background: rgba(255, 255, 255, 0.38);
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .step-indicator-progress-bar {
+    width: 92px;
+  }
 }
 
 .step-indicator-progress-bar-active {
@@ -447,15 +454,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -509,15 +514,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: 1.5px;
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -601,15 +604,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -643,15 +644,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -681,15 +680,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -702,11 +699,11 @@ html::-webkit-scrollbar {
 }
 
 .hero-bg {
-  background-image: url("https://res.cloudinary.com/drf3eatfm/image/upload/v1767262034/nitrutsav-2026/pmlogcv1tcfjwujylf19.webp");
-  background-size: 102% auto;
+  background-image: url("https://res.cloudinary.com/drf3eatfm/image/upload/v1767480320/nitrutsav-2026/p4jg8k1n7pzfmatlttg0.png");
+  /* background-size: auto 100%; */
   background-position: center -15;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: scroll;
 }
 
 .primary-button-gradient {
@@ -727,15 +724,13 @@ html::-webkit-scrollbar {
   inset: 0;
   border-radius: var(--border-radius);
   padding: var(--border-width);
-  background: linear-gradient(
-    var(--gradient-angle),
-    #fffabe 0%,
-    #e7581f 20%,
-    #8d2357 40%,
-    #055a44 60%,
-    #fb229e 80%,
-    #9906be 90%
-  );
+  background: linear-gradient(var(--gradient-angle),
+      #fffabe 0%,
+      #e7581f 20%,
+      #8d2357 40%,
+      #055a44 60%,
+      #fb229e 80%,
+      #9906be 90%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -746,6 +741,7 @@ html::-webkit-scrollbar {
   mask-composite: exclude;
   pointer-events: none;
 }
+
 .primary-button {
   display: flex;
   width: 308px;

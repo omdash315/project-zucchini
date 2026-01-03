@@ -18,7 +18,7 @@ export const nuLogo =
 export const HERO_IMAGES = {
   mainBackground:
     "https://res.cloudinary.com/drf3eatfm/image/upload/v1767262034/nitrutsav-2026/pmlogcv1tcfjwujylf19.webp",
-  girl: "https://res.cloudinary.com/drf3eatfm/image/upload/v1767206478/nitrutsav-2026/gbm94mbh547tfiubue0s.webp",
+  girl: "https://res.cloudinary.com/drf3eatfm/image/upload/v1767475968/nitrutsav-2026/innheabrrareewnspxng.png",
   background:
     "https://res.cloudinary.com/drf3eatfm/image/upload/v1767206477/nitrutsav-2026/dc25xlv5laevejdndtux.webp",
   peacockBehind: "https://www.figma.com/api/mcp/asset/956c785f-f510-493e-a8e9-0f83edb9a487",

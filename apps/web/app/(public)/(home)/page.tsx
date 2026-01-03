@@ -165,8 +165,13 @@ export default function Home() {
         </div>
       )}
 
-      <div ref={wrapperRef} className={`hero-bg ${isActive && !removeGif ? "ink-mask" : ""}`}>
-        <Hero />
+      <div className="h-screen">
+        <div
+          ref={wrapperRef}
+          className={`hero-bg h-[120vh] overflow-hidden ${isActive && !removeGif ? "ink-mask" : ""}`}
+        >
+          <Hero />
+        </div>
       </div>
 
       <style jsx global>{`
