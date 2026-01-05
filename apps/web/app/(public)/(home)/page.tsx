@@ -31,12 +31,13 @@ export default function Home() {
     const firstEntry = navEntries[0];
     if (firstEntry) {
       const navType = firstEntry.type;
-      if (navType !== "navigate" && navType !== "reload") {
+      // Only treat "back_forward" as client navigation
+      // "navigate" = direct URL entry or link click from external
+      // "reload" = page refresh
+      // Both should show the preloader
+      if (navType === "back_forward") {
         return true;
       }
-    }
-    if (document.readyState === "complete" && performance.now() > 1000) {
-      return true;
     }
 
     return false;
