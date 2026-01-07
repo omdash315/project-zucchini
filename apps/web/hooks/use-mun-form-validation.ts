@@ -1,5 +1,4 @@
-import { notAllowedInstitutes } from "@repo/shared-types/src/schemas";
-import type { MunRegistration } from "@repo/shared-types";
+import { isBlockedInstitute } from "@repo/shared-types/src/schemas";
 
 /**
  * Custom hook for MUN form validation logic
@@ -9,18 +8,6 @@ export function useMunFormValidation(
   lockNitrStatus: boolean,
   setErrors: (errors: any) => void
 ) {
-  /**
-   * Check if text contains banned institute keywords
-   */
-  const containsBannedKeyword = (text: string): boolean => {
-    const normalizedText = text
-      .toLowerCase()
-      .replace(/['\"`\-]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    return notAllowedInstitutes.some((keyword) => normalizedText.includes(keyword));
-  };
-
   /**
    * Check if text contains NIT Rourkela references
    */
@@ -54,8 +41,8 @@ export function useMunFormValidation(
   const validateInstituteOnBlur = (institute: string | undefined): void => {
     if (!institute) return;
 
-    // Check for banned institutes
-    if (containsBannedKeyword(institute)) {
+    // Check for banned institutes using shared validation
+    if (isBlockedInstitute(institute)) {
       setErrors((prev: any) => ({
         ...prev,
         institute:
@@ -80,7 +67,7 @@ export function useMunFormValidation(
   const validateUniversityOnBlur = (university: string | undefined): void => {
     if (!university) return;
 
-    if (containsBannedKeyword(university)) {
+    if (isBlockedInstitute(university)) {
       setErrors((prev: any) => ({
         ...prev,
         university:
@@ -109,7 +96,6 @@ export function useMunFormValidation(
   };
 
   return {
-    containsBannedKeyword,
     containsNitrReference,
     validateInstituteField,
     validateInstituteOnBlur,

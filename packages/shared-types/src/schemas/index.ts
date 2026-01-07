@@ -80,7 +80,7 @@ const MESSAGES = {
 /**
  * Normalize text for comparison
  */
-const normalizeText = (text: string): string => {
+export const normalizeText = (text: string): string => {
   return text
     .toLowerCase()
     .replace(/['"`-]/g, "")
@@ -90,7 +90,15 @@ const normalizeText = (text: string): string => {
 
 const normalizedBlockedInstitutes = new Set(notAllowedInstitutes.map(normalizeText));
 
-const institutionValidation = z
+/**
+ * Check if institution is blocked (for use in validation)
+ */
+export const isBlockedInstitute = (text: string): boolean => {
+  const normalized = normalizeText(text);
+  return Array.from(normalizedBlockedInstitutes).some((blocked) => normalized.includes(blocked));
+};
+
+export const institutionValidation = z
   .string()
   .min(1, MESSAGES.REQUIRED("Institution name"))
   .transform(normalizeText)

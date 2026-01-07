@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { notAllowedInstitutes } from "./index";
+import { isBlockedInstitute } from "./index";
 
 const PATTERNS = {
   NAME: /^[a-zA-Z\s]+$/,
@@ -14,29 +14,17 @@ const MESSAGES = {
     "Students from this institute/university have been officially barred from participating in NITRUTSAV'26",
 };
 
-/**
- * Check if text contains any banned keywords
- */
-const containsBannedKeyword = (text: string): boolean => {
-  const normalizedText = text
-    .toLowerCase()
-    .replace(/['\"`\-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  return notAllowedInstitutes.some((keyword) => normalizedText.includes(keyword));
-};
-
 const instituteValidation = z
   .string()
   .min(1, MESSAGES.REQUIRED("Institute name"))
-  .refine((val) => !containsBannedKeyword(val), {
+  .refine((val) => !isBlockedInstitute(val), {
     message: MESSAGES.INSTITUTE_BANNED,
   });
 
 const universityValidation = z
   .string()
   .min(1, MESSAGES.REQUIRED("University/Board"))
-  .refine((val) => !containsBannedKeyword(val), {
+  .refine((val) => !isBlockedInstitute(val), {
     message: MESSAGES.INSTITUTE_BANNED,
   });
 

@@ -2,11 +2,33 @@ import { NextRequest } from "next/server";
 import { registerMunUser, registerMunTeam } from "@repo/database";
 import { handleResponse, handleApiError, requireAuth } from "@repo/shared-utils/server";
 import { type MunRegistration, type TeamMunRegistration } from "@repo/shared-types";
+import { isBlockedInstitute } from "@repo/shared-types/src/schemas";
 
 function normalizeDateOfBirth(data: MunRegistration): void {
   if (data.dateOfBirth && typeof data.dateOfBirth === "string") {
     data.dateOfBirth = new Date(data.dateOfBirth);
   }
+}
+
+function validateInstitute(
+  institute: string,
+  university: string
+): { valid: boolean; error?: string } {
+  if (isBlockedInstitute(institute)) {
+    return {
+      valid: false,
+      error:
+        "Students from this institute have been officially barred from participating in NITRUTSAV'26",
+    };
+  }
+  if (isBlockedInstitute(university)) {
+    return {
+      valid: false,
+      error:
+        "Students from this university have been officially barred from participating in NITRUTSAV'26",
+    };
+  }
+  return { valid: true };
 }
 
 function validateSchoolStudentCommittee(
@@ -33,6 +55,31 @@ export async function POST(request: NextRequest) {
 
     if (body.teamLeader && body.teammate1 && body.teammate2) {
       const teamData = body as TeamMunRegistration;
+
+      // Validate banned institutes for all team members
+      const leaderInstituteVal = validateInstitute(
+        teamData.teamLeader.institute,
+        teamData.teamLeader.university
+      );
+      if (!leaderInstituteVal.valid) {
+        return handleApiError(new Error(leaderInstituteVal.error!), "Banned institute");
+      }
+
+      const teammate1InstituteVal = validateInstitute(
+        teamData.teammate1.institute,
+        teamData.teammate1.university
+      );
+      if (!teammate1InstituteVal.valid) {
+        return handleApiError(new Error(teammate1InstituteVal.error!), "Banned institute");
+      }
+
+      const teammate2InstituteVal = validateInstitute(
+        teamData.teammate2.institute,
+        teamData.teammate2.university
+      );
+      if (!teammate2InstituteVal.valid) {
+        return handleApiError(new Error(teammate2InstituteVal.error!), "Banned institute");
+      }
 
       // Validate school student committee restrictions for all team members
       const leaderValidation = validateSchoolStudentCommittee(
@@ -105,6 +152,15 @@ export async function POST(request: NextRequest) {
     } else {
       const individualData = body as MunRegistration;
       const { isNitrStudent = false } = body;
+
+      // Validate banned institutes
+      const instituteValidation = validateInstitute(
+        individualData.institute,
+        individualData.university
+      );
+      if (!instituteValidation.valid) {
+        return handleApiError(new Error(instituteValidation.error!), "Banned institute");
+      }
 
       // Validate school student committee restrictions
       const validation = validateSchoolStudentCommittee(
